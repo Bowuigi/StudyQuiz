@@ -1,8 +1,12 @@
 {
-  "extends": "astro/tsconfigs/strict",
-  "include": [".astro/types.d.ts", "**/*"],
+  "include": ["**/*"],
   "exclude": ["dist"],
   "compilerOptions": {
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "jsx": "react-jsx",
+    "jsxImportSource": "preact",
+    "target": "ESNext",
+    "module": "NodeNext",
     "noEmit": true,
     "strict": true,
     "verbatimModuleSyntax": true,

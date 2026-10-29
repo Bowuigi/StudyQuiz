@@ -5,7 +5,7 @@ Una aplicación sencilla que se ocupa de agregar y presentar cuestionarios, tarj
 ## Stack tecnológico
 
 - Typescript
-- Astro
+- Preact
 - TailwindCSS con DaisyUI
 
 Herramientas de desarrollo:

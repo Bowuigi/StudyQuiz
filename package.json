@@ -1,27 +1,30 @@
 {
-  "name": "",
-  "version": "0.0.1",
+  "name": "study-quiz",
+  "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "astro": "astro",
-    "build": "astro build",
-    "dev": "astro dev",
+    "build": "vite build",
+    "dev": "vite dev",
     "fmt": "oxfmt",
     "lint": "oxlint",
     "lint:fix": "oxlint --fix",
-    "preview": "astro preview",
+    "preview": "vite preview",
     "test": "vitest"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.3.3",
-    "astro": "^7.4.4",
     "daisyui": "^5.7.50",
+    "preact": "^11.1.0",
     "tailwindcss": "^4.3.3"
   },
   "devDependencies": {
+    "@preact/preset-vite": "^2.10.6",
+    "@testing-library/preact": "^3.2.6",
+    "happy-dom": "^21.0.4",
     "oxfmt": "^0.75.0",
     "oxlint": "^1.90.0",
     "oxlint-tsgolint": "^7.0.2005",
+    "vite": "^8.3.5",
     "vitest": "^5.0.5"
   },
   "engines": {
