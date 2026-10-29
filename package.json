@@ -1,15 +1,15 @@
 {
   "name": "",
-  "type": "module",
   "version": "0.0.1",
-  "engines": {
-    "node": ">=22.23.4"
-  },
+  "type": "module",
   "scripts": {
-    "dev": "astro dev",
-    "build": "astro build",
-    "preview": "astro preview",
     "astro": "astro",
+    "build": "astro build",
+    "dev": "astro dev",
+    "fmt": "oxfmt",
+    "lint": "oxlint",
+    "lint:fix": "oxlint --fix",
+    "preview": "astro preview",
     "test": "vitest"
   },
   "dependencies": {
@@ -19,6 +19,12 @@
     "tailwindcss": "^4.3.3"
   },
   "devDependencies": {
+    "oxfmt": "^0.75.0",
+    "oxlint": "^1.90.0",
+    "oxlint-tsgolint": "^7.0.2005",
     "vitest": "^5.0.5"
+  },
+  "engines": {
+    "node": ">=22.23.4"
   }
 }
