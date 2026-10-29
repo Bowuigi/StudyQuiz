@@ -96,7 +96,7 @@ describe('quiz building', () => {
     });
     fireEvent.click(screen.getByRole('button', { name: 'Comenzar' }));
 
-    expect(screen.getByText('3 actividades')).toBeDefined();
+    expect(screen.getByText('1 de 3')).toBeDefined();
   });
 
   it('caps the quiz at the available count', () => {
@@ -109,6 +109,6 @@ describe('quiz building', () => {
     });
     fireEvent.click(screen.getByRole('button', { name: 'Comenzar' }));
 
-    expect(screen.getByText('4 actividades')).toBeDefined();
+    expect(screen.getByText('1 de 4')).toBeDefined();
   });
 });
