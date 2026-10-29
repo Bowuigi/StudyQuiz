@@ -84,6 +84,13 @@ function shuffledOptionOrder(activity: QuizActivity, random: RandomFn): Array<nu
     );
   }
 
+  if (activity.is === 'reorder') {
+    return shuffle(
+      activity.elements.map((_, index) => index),
+      random,
+    );
+  }
+
   return [];
 }
 
