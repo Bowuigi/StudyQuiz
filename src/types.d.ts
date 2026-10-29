@@ -1,6 +1,6 @@
 //// Data layout
 
-type MultipleChoiceActivity = {
+export type MultipleChoiceActivity = {
   question: string;
   /**
    * Every option with isCorrect === true is correct. The explanation says why the answer is
@@ -10,34 +10,34 @@ type MultipleChoiceActivity = {
 };
 
 /** Generalizes "pick one from A, B, C, ..." and "is this true?" */
-type SingleChoiceActivity = {
+export type SingleChoiceActivity = {
   question: string;
   /** The first option declared is correct. The explanation says why the answer is correct/incorrect */
   options: Array<{ label: string; explanation: string }>;
 };
 
-type ReorderActivity = {
+export type ReorderActivity = {
   title: string;
   /** Elements in their correct order */
   elements: Array<string>;
 };
 
-type RelateActivity = {
+export type RelateActivity = {
   title: string;
   /** E.g. {numbers: 'One, two', letters: 'A, B'} */
   related: Record<string, string>;
 };
 
-type CompleteWordsActivity = {
+export type CompleteWordsActivity = {
   parts: Array<{ isBlank: boolean; label: string }>;
 };
 
-type CardActivity = {
+export type CardActivity = {
   front: string;
   back: string;
 };
 
-type QuizActivity =
+export type QuizActivity =
   | ({ is: 'multiple-choice' } & MultipleChoiceActivity)
   | ({ is: 'single-choice' } & SingleChoiceActivity)
   | ({ is: 'reorder' } & ReorderActivity)
