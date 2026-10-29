@@ -18,6 +18,6 @@ Run linting, formatting and testing with `npm run lint`, `npm run fmt` and `npm 
 
 Available skills in this project (load with the `skill` tool when the task matches automatically):
 
-| Skill | When to Use |
-|---|---|
+| Skill   | When to Use                                                    |
+| ------- | -------------------------------------------------------------- |
 | daisyui | Writing HTML/JSX — must use daisyUI components for TailwindCSS |

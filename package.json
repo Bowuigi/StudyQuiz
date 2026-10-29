@@ -8,9 +8,9 @@
     "fmt": "oxfmt",
     "lint": "oxlint",
     "lint:fix": "oxlint --fix",
+    "prepare": "husky",
     "preview": "vite preview",
-    "test": "vitest",
-    "prepare": "husky"
+    "test": "vitest"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.3.3",
@@ -30,13 +30,13 @@
     "vite": "^8.3.5",
     "vitest": "^5.0.5"
   },
-  "engines": {
-    "node": ">=22.23.4"
-  },
   "lint-staged": {
     "*": [
       "oxlint --no-error-on-unmatched-pattern",
       "oxfmt --no-error-on-unmatched-pattern"
     ]
+  },
+  "engines": {
+    "node": ">=22.23.4"
   }
 }
