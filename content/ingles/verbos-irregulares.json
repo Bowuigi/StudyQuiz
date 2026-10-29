@@ -1,0 +1,15 @@
+[
+  {
+    "is": "card",
+    "front": "go (pasado)",
+    "back": "went"
+  },
+  {
+    "is": "complete-words",
+    "parts": [
+      { "isBlank": false, "label": "El pasado de eat es " },
+      { "isBlank": true, "label": "ate" },
+      { "isBlank": false, "label": "." }
+    ]
+  }
+]

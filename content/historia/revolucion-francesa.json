@@ -1,0 +1,24 @@
+[
+  {
+    "is": "multiple-choice",
+    "question": "¿Qué ideas defendió la Revolución francesa?",
+    "options": [
+      { "label": "Libertad", "isCorrect": true, "explanation": "Fue uno de sus lemas." },
+      { "label": "Igualdad", "isCorrect": true, "explanation": "Fue uno de sus lemas." },
+      {
+        "label": "Monarquía absoluta",
+        "isCorrect": false,
+        "explanation": "La revolución combatió ese sistema."
+      }
+    ]
+  },
+  {
+    "is": "reorder",
+    "title": "Ordena los hechos de la Revolución francesa",
+    "elements": [
+      "Toma de la Bastilla",
+      "Declaración de los Derechos del Hombre",
+      "Fin de la monarquía"
+    ]
+  }
+]

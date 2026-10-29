@@ -1,0 +1,12 @@
+[
+  {
+    "is": "reorder",
+    "title": "Ordena las figuras de menor a mayor número de lados",
+    "elements": ["Triángulo", "Cuadrado", "Pentágono"]
+  },
+  {
+    "is": "relate",
+    "title": "Relaciona cada figura con su número de lados",
+    "related": { "Triángulo": "3", "Cuadrado": "4", "Pentágono": "5" }
+  }
+]

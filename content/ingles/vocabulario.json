@@ -1,0 +1,16 @@
+[
+  {
+    "is": "relate",
+    "title": "Relaciona cada palabra con su traducción",
+    "related": { "apple": "manzana", "book": "libro", "dog": "perro" }
+  },
+  {
+    "is": "single-choice",
+    "question": "¿Qué significa house?",
+    "options": [
+      { "label": "Casa", "explanation": "House significa casa." },
+      { "label": "Perro", "explanation": "Perro se dice dog." },
+      { "label": "Libro", "explanation": "Libro se dice book." }
+    ]
+  }
+]

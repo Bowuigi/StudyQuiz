@@ -1,0 +1,28 @@
+[
+  {
+    "is": "single-choice",
+    "question": "¿Cuánto es la mitad de 10?",
+    "options": [
+      { "label": "5", "explanation": "La mitad de 10 es 5." },
+      { "label": "4", "explanation": "4 es menor que la mitad." },
+      { "label": "20", "explanation": "20 es el doble de 10." }
+    ]
+  },
+  {
+    "is": "multiple-choice",
+    "question": "¿Cuáles de estos números son pares?",
+    "options": [
+      { "label": "2", "isCorrect": true, "explanation": "2 se puede dividir entre 2." },
+      { "label": "3", "isCorrect": false, "explanation": "3 es un número impar." },
+      { "label": "8", "isCorrect": true, "explanation": "8 se puede dividir entre 2." }
+    ]
+  },
+  {
+    "is": "complete-words",
+    "parts": [
+      { "isBlank": false, "label": "En la fracción 3/4, el " },
+      { "isBlank": true, "label": "denominador" },
+      { "isBlank": false, "label": " es 4." }
+    ]
+  }
+]

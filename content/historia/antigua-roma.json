@@ -1,0 +1,15 @@
+[
+  {
+    "is": "card",
+    "front": "¿Cuál era la capital del Imperio romano?",
+    "back": "Roma."
+  },
+  {
+    "is": "single-choice",
+    "question": "¿Quién fue el primer emperador romano?",
+    "options": [
+      { "label": "Augusto", "explanation": "Augusto gobernó desde el año 27 a. C." },
+      { "label": "Julio César", "explanation": "Julio César fue dictador, no emperador." }
+    ]
+  }
+]
