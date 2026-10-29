@@ -114,6 +114,18 @@
       "env": {
         "browser": true
       }
+    },
+    {
+      "files": ["src/**/*"],
+      "env": {
+        "browser": true
+      }
+    },
+    {
+      "files": ["**/*.d.ts"],
+      "rules": {
+        "typescript/consistent-type-definitions": "allow"
+      }
     }
   ]
 }
