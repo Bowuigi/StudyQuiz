@@ -23,6 +23,7 @@
     "no-plusplus": "allow",
     "no-warning-comments": "warn",
     "max-lines": ["error", 350],
+    "max-lines-per-function": ["error", 60],
     "max-classes-per-file": ["error", 3],
     "max-params": ["error", 6],
     "max-statements": ["allow", 15],
