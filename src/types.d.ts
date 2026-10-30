@@ -12,7 +12,7 @@ export type MultipleChoiceActivity = {
 /** Generalizes "pick one from A, B, C, ..." and "is this true?" */
 export type SingleChoiceActivity = {
   question: string;
-  /** The first option declared is correct. The explanation says why the answer is correct/incorrect */
+  /** The first option declared is correct. The explanation says why each answer is correct/incorrect */
   options: Array<{ label: string; explanation: string }>;
 };
 
