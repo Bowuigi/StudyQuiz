@@ -58,12 +58,12 @@ describe('single choice', () => {
     const onResult = resultSpy();
     render(<QuizRunner quiz={[singleChoice]} onResult={onResult} onFinished={finishedSpy()} />);
 
-    expect(screen.queryByText('Roma: Roma es la capital.')).toBeNull();
+    expect(screen.queryByText('Roma es la capital.')).toBeNull();
 
     fireEvent.click(screen.getByRole('radio', { name: 'Roma' }));
 
-    expect(screen.getByText('Roma: Roma es la capital.')).toBeDefined();
-    expect(screen.getByText('París: París no es la capital.')).toBeDefined();
+    expect(screen.getByText('Roma es la capital.')).toBeDefined();
+    expect(screen.getByText('París no es la capital.')).toBeDefined();
     expect(screen.getByRole('button', { name: 'Siguiente' })).toBeDefined();
     expect(onResult).toHaveBeenCalledTimes(1);
   });
@@ -87,14 +87,14 @@ describe('multiple choice', () => {
     fireEvent.click(screen.getByRole('checkbox', { name: '2' }));
     fireEvent.click(screen.getByRole('checkbox', { name: '8' }));
 
-    expect(screen.queryByText('2: 2 es par.')).toBeNull();
+    expect(screen.queryByText('2 es par.')).toBeNull();
     expect(screen.queryByRole('button', { name: 'Siguiente' })).toBeNull();
 
     fireEvent.click(screen.getByRole('button', { name: 'Confirmar' }));
 
-    expect(screen.getByText('2: 2 es par.')).toBeDefined();
-    expect(screen.getByText('3: 3 es impar.')).toBeDefined();
-    expect(screen.getByText('8: 8 es par.')).toBeDefined();
+    expect(screen.getByText('2 es par.')).toBeDefined();
+    expect(screen.getByText('3 es impar.')).toBeDefined();
+    expect(screen.getByText('8 es par.')).toBeDefined();
     expect(screen.getByRole('button', { name: 'Siguiente' })).toBeDefined();
     expect(screen.getByRole<HTMLInputElement>('checkbox', { name: '2' }).disabled).toBe(true);
   });

@@ -57,7 +57,7 @@ export function MultipleChoiceActivity({
                     </div>
                     {confirmed && (
                       <div aria-hidden="true" class="text-sm text-base-content/70 mt-2">
-                        {label}: {explanation}
+                        {explanation}
                       </div>
                     )}
                   </div>
