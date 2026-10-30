@@ -1,6 +1,20 @@
 import type { JSX } from 'preact';
+import { useMemo } from 'preact/hooks';
 
 import type { RelateActivity as RelateData } from '../types.d.ts';
+
+function shuffleOptions(values: Array<string>): Array<string> {
+  const shuffled = [...values];
+
+  for (let index = shuffled.length - 1; index > 0; index -= 1) {
+    const otherIndex = Math.floor(Math.random() * (index + 1));
+    const current = shuffled[index]!;
+    shuffled[index] = shuffled[otherIndex]!;
+    shuffled[otherIndex] = current;
+  }
+
+  return shuffled;
+}
 
 interface RelateActivityProps {
   activity: RelateData;
@@ -18,6 +32,11 @@ export function RelateActivity({
   const keys = Object.keys(activity.related);
   const values = [...new Set(Object.values(activity.related))];
 
+  const optionsByKey = useMemo(
+    () => Object.fromEntries(keys.map(key => [key, shuffleOptions(values)])),
+    [activity.related],
+  );
+
   return (
     <div class="flex flex-col gap-4">
       <h2 class="text-xl font-bold">{activity.title}</h2>
@@ -34,7 +53,7 @@ export function RelateActivity({
                 onSelect(key, event.currentTarget.value);
               }}>
               <option value="">Selecciona</option>
-              {values.map(value => (
+              {optionsByKey[key]?.map(value => (
                 <option key={value} value={value}>
                   {value}
                 </option>
