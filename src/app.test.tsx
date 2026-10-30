@@ -2,7 +2,7 @@ import { fireEvent, render, screen } from '@testing-library/preact';
 import { describe, expect, it } from 'vitest';
 
 import { App } from './app.tsx';
-import { loadSubjects } from './content.ts';
+import type { Subject } from './content.ts';
 
 const ACTIVITY_TYPE_LABELS = [
   'Opción múltiple',
@@ -13,8 +13,62 @@ const ACTIVITY_TYPE_LABELS = [
   'Tarjetas',
 ];
 
+// Fixture subjects so the tests do not depend on the contents of the content folder.
+const subjects: Array<Subject> = [
+  {
+    name: 'historia',
+    topics: [
+      {
+        id: 'historia/antigua-roma',
+        subject: 'historia',
+        name: 'antigua-roma',
+        activities: [
+          { is: 'card', front: '¿Cuál era la capital del Imperio romano?', back: 'Roma.' },
+          {
+            is: 'single-choice',
+            question: '¿Quién fue el primer emperador romano?',
+            options: [
+              { label: 'Augusto', explanation: 'Augusto gobernó desde el año 27 a. C.' },
+              { label: 'Julio César', explanation: 'Julio César fue dictador, no emperador.' },
+            ],
+          },
+        ],
+      },
+      {
+        id: 'historia/revolucion-francesa',
+        subject: 'historia',
+        name: 'revolucion-francesa',
+        activities: [
+          {
+            is: 'multiple-choice',
+            question: '¿Qué ideas defendió la Revolución francesa?',
+            options: [
+              { label: 'Libertad', isCorrect: true, explanation: 'Fue uno de sus lemas.' },
+              { label: 'Igualdad', isCorrect: true, explanation: 'Fue uno de sus lemas.' },
+              {
+                label: 'Monarquía absoluta',
+                isCorrect: false,
+                explanation: 'La revolución combatió ese sistema.',
+              },
+            ],
+          },
+          {
+            is: 'reorder',
+            title: 'Ordena los hechos de la Revolución francesa',
+            elements: [
+              'Toma de la Bastilla',
+              'Declaración de los Derechos del Hombre',
+              'Fin de la monarquía',
+            ],
+          },
+        ],
+      },
+    ],
+  },
+];
+
 function openHistoria(): void {
-  render(<App />);
+  render(<App subjects={subjects} />);
   fireEvent.click(screen.getByRole('button', { name: 'historia' }));
 }
 
@@ -29,9 +83,9 @@ describe('App shell', () => {
 
 describe('home view', () => {
   it('lists every sample subject', () => {
-    render(<App />);
+    render(<App subjects={subjects} />);
 
-    for (const subject of loadSubjects()) {
+    for (const subject of subjects) {
       expect(screen.getByRole('button', { name: subject.name })).toBeDefined();
     }
   });
