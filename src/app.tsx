@@ -7,6 +7,7 @@ import { StatsView } from './components/stats-view.tsx';
 import { SummaryView } from './components/summary-view.tsx';
 import { TopicView } from './components/topic-view.tsx';
 import { type Subject, loadSubjects } from './content.ts';
+import { formatDisplayName } from './format.ts';
 import type { BuildQuizOptions } from './quiz.ts';
 import { type QuizSession, useQuizSession } from './use-quiz-session.ts';
 
@@ -17,11 +18,22 @@ export interface AppProps {
   now?: () => number;
 }
 
-function AppHeader(): JSX.Element {
+interface AppHeaderProps {
+  subjectName: string | null;
+}
+
+function AppHeader({ subjectName }: AppHeaderProps): JSX.Element {
   return (
     <header class="navbar bg-base-100 shadow-sm">
-      <div class="navbar-start pl-5">
+      <div class="navbar-start pl-5 flex items-center gap-3">
         <h1 class="text-xl font-bold tracking-tight">StudyQuiz</h1>
+        {subjectName === null ? (
+          <span class="text-sm text-base-content/70">¡Estudiemos!</span>
+        ) : (
+          <span class="text-sm font-medium text-base-content">
+            {formatDisplayName(subjectName)}
+          </span>
+        )}
       </div>
     </header>
   );
@@ -31,6 +43,7 @@ interface AppContentProps {
   subjects: Array<Subject>;
   view: View;
   subject: Subject | null;
+  subjectName: string | null;
   session: QuizSession;
   onHome: () => void;
   onOpenSubject: (subject: Subject) => void;
@@ -41,11 +54,11 @@ interface AppContentProps {
 }
 
 function AppContent(props: AppContentProps): JSX.Element {
-  const { session, subject, subjects, view } = props;
+  const { session, subject, subjects, view, subjectName } = props;
 
   return (
     <div class="min-h-screen bg-base-200">
-      <AppHeader />
+      <AppHeader subjectName={subjectName} />
       <main class="mx-auto flex max-w-4xl flex-col gap-6 p-6">
         {session.storageError === null ? null : (
           <div class="alert alert-error" role="alert">
@@ -114,6 +127,7 @@ export function App({ subjects: providedSubjects, now = Date.now }: AppProps = {
       subjects={subjects}
       view={view}
       subject={subject}
+      subjectName={subject?.name ?? null}
       session={session}
       onHome={goHome}
       onOpenSubject={openSubject}

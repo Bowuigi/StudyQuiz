@@ -3,6 +3,7 @@ import { describe, expect, it } from 'vitest';
 
 import { App } from './app.tsx';
 import type { Subject } from './content.ts';
+import { formatDisplayName } from './format.ts';
 
 const ACTIVITY_TYPE_LABELS = [
   'Opción múltiple',
@@ -67,9 +68,19 @@ const subjects: Array<Subject> = [
   },
 ];
 
+function subjectButtonName(subject: Subject): string {
+  const activities = subject.topics.reduce((total, topic) => total + topic.activities.length, 0);
+  const topics = subject.topics.length;
+  return [
+    formatDisplayName(subject.name),
+    `${activities} ${activities === 1 ? 'actividad' : 'actividades'}`,
+    `${topics} ${topics === 1 ? 'tema' : 'temas'}`,
+  ].join(' ');
+}
+
 function openHistoria(): void {
   render(<App subjects={subjects} />);
-  fireEvent.click(screen.getByRole('button', { name: 'historia' }));
+  fireEvent.click(screen.getByRole('button', { name: subjectButtonName(subjects[0]!) }));
 }
 
 describe('App shell', () => {
@@ -82,11 +93,11 @@ describe('App shell', () => {
 });
 
 describe('home view', () => {
-  it('lists every sample subject', () => {
+  it('renders one button per subject with its title, activities, and topics', () => {
     render(<App subjects={subjects} />);
 
     for (const subject of subjects) {
-      expect(screen.getByRole('button', { name: subject.name })).toBeDefined();
+      expect(screen.getByRole('button', { name: subjectButtonName(subject) })).toBeDefined();
     }
   });
 
@@ -94,6 +105,22 @@ describe('home view', () => {
     render(<App subjects={[]} />);
 
     expect(screen.getByText('No hay contenido disponible.')).toBeDefined();
+  });
+});
+
+describe('navbar', () => {
+  it('shows ¡Estudiemos! when no subject is picked', () => {
+    render(<App subjects={subjects} />);
+
+    expect(screen.getByText('¡Estudiemos!')).toBeDefined();
+  });
+
+  it('shows the picked subject after a click', () => {
+    render(<App subjects={subjects} />);
+
+    fireEvent.click(screen.getByRole('button', { name: subjectButtonName(subjects[0]!) }));
+
+    expect(screen.getByText(formatDisplayName(subjects[0]!.name))).toBeDefined();
   });
 });
 

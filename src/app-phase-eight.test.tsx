@@ -44,7 +44,7 @@ describe('phase eight integration', () => {
     let currentTime = 0;
     render(<App subjects={[subject]} now={() => currentTime} />);
 
-    fireEvent.click(screen.getByRole('button', { name: 'demo' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Demo 2 actividades 1 tema' }));
     fireEvent.click(screen.getByRole('button', { name: 'Comenzar' }));
 
     fireEvent.click(screen.getByRole('radio', { name: /^(Alpha|Beta)$/ }));
@@ -75,7 +75,7 @@ describe('phase eight integration', () => {
   it('returns to the home view from the summary', () => {
     render(<App subjects={[subject]} now={() => 0} />);
 
-    fireEvent.click(screen.getByRole('button', { name: 'demo' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Demo 2 actividades 1 tema' }));
     fireEvent.click(screen.getByRole('button', { name: 'Comenzar' }));
     fireEvent.click(screen.getByRole('radio', { name: /^(Alpha|Beta)$/ }));
     fireEvent.click(screen.getByRole('button', { name: 'Siguiente' }));

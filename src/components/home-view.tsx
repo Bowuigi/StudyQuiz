@@ -1,11 +1,40 @@
 import type { JSX } from 'preact';
 
 import type { Subject } from '../content.ts';
+import { formatDisplayName } from '../format.ts';
 
 interface HomeViewProps {
   subjects: Array<Subject>;
   onSelectSubject: (subject: Subject) => void;
   onOpenStats: () => void;
+}
+
+function countActivities(subject: Subject): number {
+  return subject.topics.reduce((total, topic) => total + topic.activities.length, 0);
+}
+
+function subjectCard(subject: Subject, onSelectSubject: (subject: Subject) => void): JSX.Element {
+  const activities = countActivities(subject);
+  const topics = subject.topics.length;
+
+  return (
+    <button
+      type="button"
+      class="card card-border bg-base-100 shadow-sm"
+      onClick={() => {
+        onSelectSubject(subject);
+      }}>
+      <div class="card-body p-4 flex flex-col items-center justify-center gap-1 text-center">
+        <h3 class="card-title text-base">{formatDisplayName(subject.name)}</h3>
+        <p class="text-sm text-base-content/70">
+          {activities} {activities === 1 ? 'actividad' : 'actividades'}
+        </p>
+        <p class="text-sm text-base-content/70">
+          {topics} {topics === 1 ? 'tema' : 'temas'}
+        </p>
+      </div>
+    </button>
+  );
 }
 
 export function HomeView({ subjects, onSelectSubject, onOpenStats }: HomeViewProps): JSX.Element {
@@ -21,18 +50,8 @@ export function HomeView({ subjects, onSelectSubject, onOpenStats }: HomeViewPro
               <span>No hay contenido disponible.</span>
             </div>
           ) : (
-            <div class="flex flex-col gap-2">
-              {subjects.map(subject => (
-                <button
-                  key={subject.name}
-                  type="button"
-                  class="btn justify-start"
-                  onClick={() => {
-                    onSelectSubject(subject);
-                  }}>
-                  {subject.name}
-                </button>
-              ))}
+            <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
+              {subjects.map(subject => subjectCard(subject, onSelectSubject))}
             </div>
           )}
         </div>
