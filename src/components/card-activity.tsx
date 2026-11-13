@@ -4,58 +4,54 @@ import type { CardActivity as CardData } from '../types.d.ts';
 
 interface CardActivityProps {
   activity: CardData;
-  revealed: boolean;
-  confirmed: boolean;
-  onReveal: () => void;
+  flipped: boolean;
+  onFlip: () => void;
   onGrade: (known: boolean) => void;
 }
 
 export function CardActivity({
   activity,
-  revealed,
-  confirmed,
-  onReveal,
+  flipped,
+  onFlip,
   onGrade,
 }: CardActivityProps): JSX.Element {
   return (
     <div class="flex flex-col gap-4">
-      <p class="text-sm tracking-wide text-base-content/60 uppercase">Tarjeta</p>
-      <h2 class="text-xl font-bold">{activity.front}</h2>
+      <div class="flex justify-center card-perspective">
+        <button
+          type="button"
+          class="card card-border shadow card-flip w-[60%] aspect-3/2"
+          onClick={onFlip}
+          data-flipped={flipped ? '' : undefined}>
+          <div class="card-face card-front p-4 flex flex-col items-center justify-center vertical-align-center gap-2">
+            <h2 class="text-xl font-bold">{activity.front}</h2>
+          </div>
+          <div class="card-face card-back p-4 flex flex-row items-center justify-center gap-2">
+            <p class="text-lg">{activity.back}</p>
+          </div>
+        </button>
+      </div>
 
-      {revealed ? (
-        <div class="alert alert-info">
-          <span>{activity.back}</span>
+      {flipped ? (
+        <div class="flex justify-center gap-2">
+          <button
+            type="button"
+            class="btn btn-success"
+            onClick={() => {
+              onGrade(true);
+            }}>
+            Lo sé
+          </button>
+          <button
+            type="button"
+            class="btn btn-error"
+            onClick={() => {
+              onGrade(false);
+            }}>
+            Me olvidé
+          </button>
         </div>
       ) : null}
-
-      {confirmed ? null : (
-        <div class="card-actions">
-          {revealed ? (
-            <>
-              <button
-                type="button"
-                class="btn btn-success"
-                onClick={() => {
-                  onGrade(true);
-                }}>
-                Lo sé
-              </button>
-              <button
-                type="button"
-                class="btn btn-error"
-                onClick={() => {
-                  onGrade(false);
-                }}>
-                Me olvidé
-              </button>
-            </>
-          ) : (
-            <button type="button" class="btn" onClick={onReveal}>
-              Mostrar respuesta
-            </button>
-          )}
-        </div>
-      )}
     </div>
   );
 }

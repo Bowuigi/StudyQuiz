@@ -167,34 +167,62 @@ describe('quiz navigation', () => {
 });
 
 describe('cards', () => {
-  it('shows the front, flips to the back, and grades as known', () => {
+  it('shows the front, flips to the back on card click, and grades as known', () => {
     const onResult = resultSpy();
-    render(<QuizRunner quiz={[card]} onResult={onResult} onFinished={finishedSpy()} />);
+    const onFinished = finishedSpy();
+    render(<QuizRunner quiz={[card]} onResult={onResult} onFinished={onFinished} />);
 
     expect(screen.getByText('Frente')).toBeDefined();
-    expect(screen.queryByText('Dorso')).toBeNull();
+    expect(screen.queryByRole('button', { name: 'Lo sé' })).toBeNull();
+    expect(screen.queryByRole('button', { name: 'Me olvidé' })).toBeNull();
+    expect(screen.queryByRole('button', { name: 'Mostrar respuesta' })).toBeNull();
+    expect(screen.queryByRole('button', { name: 'Siguiente' })).toBeNull();
+    expect(document.querySelector('[data-flipped]')).toBeNull();
 
-    fireEvent.click(screen.getByRole('button', { name: 'Mostrar respuesta' }));
+    fireEvent.click(screen.getByRole('button', { name: /Frente/ }));
 
     expect(screen.getByText('Dorso')).toBeDefined();
+    expect(document.querySelector('[data-flipped]')).not.toBeNull();
+    expect(screen.getByRole('button', { name: 'Lo sé' })).toBeDefined();
+    expect(screen.getByRole('button', { name: 'Me olvidé' })).toBeDefined();
 
     fireEvent.click(screen.getByRole('button', { name: 'Lo sé' }));
 
     expect(onResult).toHaveBeenCalledWith(
       expect.objectContaining({ correct: true, answer: { is: 'card', known: true } }),
     );
-    expect(screen.getByRole('button', { name: 'Siguiente' })).toBeDefined();
+    expect(onFinished).toHaveBeenCalledTimes(1);
+    expect(onFinished.mock.calls[0]?.[0]).toHaveLength(1);
   });
 
-  it('grades as forgotten with Me olvidé', () => {
+  it('advances to the next activity when the user says Lo sé', () => {
     const onResult = resultSpy();
-    render(<QuizRunner quiz={[card]} onResult={onResult} onFinished={finishedSpy()} />);
+    const onFinished = finishedSpy();
+    render(<QuizRunner quiz={[card, singleChoice]} onResult={onResult} onFinished={onFinished} />);
 
-    fireEvent.click(screen.getByRole('button', { name: 'Mostrar respuesta' }));
+    expect(screen.getByText('1 de 2')).toBeDefined();
+    expect(screen.getByText('Frente')).toBeDefined();
+
+    fireEvent.click(screen.getByRole('button', { name: /Frente/ }));
+    fireEvent.click(screen.getByRole('button', { name: 'Lo sé' }));
+
+    expect(screen.getByText('2 de 2')).toBeDefined();
+    expect(screen.getByText('¿Cuál es la capital de Italia?')).toBeDefined();
+    expect(onResult).toHaveBeenCalledTimes(1);
+  });
+
+  it('grades as forgotten with Me olvidé and finishes the quiz', () => {
+    const onResult = resultSpy();
+    const onFinished = finishedSpy();
+    render(<QuizRunner quiz={[card]} onResult={onResult} onFinished={onFinished} />);
+
+    fireEvent.click(screen.getByRole('button', { name: /Frente/ }));
     fireEvent.click(screen.getByRole('button', { name: 'Me olvidé' }));
 
     expect(onResult).toHaveBeenCalledWith(
       expect.objectContaining({ correct: false, answer: { is: 'card', known: false } }),
     );
+    expect(onFinished).toHaveBeenCalledTimes(1);
+    expect(onFinished.mock.calls[0]?.[0]).toHaveLength(1);
   });
 });

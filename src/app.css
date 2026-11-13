@@ -2,3 +2,26 @@
 @plugin "daisyui" {
   themes: all;
 }
+
+.card-perspective {
+  perspective: 1000px;
+}
+
+.card-flip {
+  transform-style: preserve-3d;
+  transition: transform 0.3s;
+}
+
+.card-flip[data-flipped] {
+  transform: rotateY(180deg);
+}
+
+.card-face {
+  backface-visibility: hidden;
+  position: absolute;
+  inset: 0;
+}
+
+.card-back {
+  transform: rotateY(180deg);
+}

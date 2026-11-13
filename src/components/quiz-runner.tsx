@@ -1,5 +1,5 @@
 import type { JSX } from 'preact';
-import { useState } from 'preact/hooks';
+import { useRef, useState } from 'preact/hooks';
 
 import { formatDisplayName } from '../format.ts';
 import type { QuizItem } from '../quiz.ts';
@@ -16,7 +16,7 @@ interface QuizRunnerProps {
 
 export function QuizRunner({ quiz, onResult, onFinished }: QuizRunnerProps): JSX.Element {
   const [index, setIndex] = useState(0);
-  const [results, setResults] = useState<Array<QuizResult>>([]);
+  const resultsRef = useRef<Array<QuizResult>>([]);
   const item = quiz[index];
 
   if (item === undefined) {
@@ -28,13 +28,13 @@ export function QuizRunner({ quiz, onResult, onFinished }: QuizRunnerProps): JSX
   }
 
   function handleResult(result: QuizResult): void {
-    setResults(current => [...current, result]);
+    resultsRef.current = [...resultsRef.current, result];
     onResult(result);
   }
 
   function handleNext(): void {
     if (index >= quiz.length - 1) {
-      onFinished(results);
+      onFinished(resultsRef.current);
       return;
     }
 
