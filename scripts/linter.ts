@@ -1600,7 +1600,6 @@ function isSpanish(text: string): boolean {
 
 function lintTopicFile(filePath: string, rawText: string): TopicDiagnostics {
   const diagnostics: Array<Diagnostic> = [];
-  let activities: Array<Activity> = [];
 
   // Parse JSON
   let parsed: unknown;
@@ -1652,7 +1651,7 @@ function lintTopicFile(filePath: string, rawText: string): TopicDiagnostics {
   const activityOffsets = findActivityOffsets(rawText);
 
   // Validate each activity
-  activities = parsed as Array<Activity>;
+  const activities = parsed as Array<Activity>;
   for (let i = 0; i < activities.length; i++) {
     const activity = activities[i]!;
     const offset = activityOffsets[i] ?? { start: 0, end: 0 };

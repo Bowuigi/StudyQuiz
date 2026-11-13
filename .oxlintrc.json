@@ -108,7 +108,6 @@
         "complexity": "allow",
         "no-use-before-define": "allow",
         "unicorn/switch-case-braces": "allow",
-        "no-useless-assignment": "allow",
         "unicorn/no-negated-condition": "allow",
         "eslint/no-negated-condition": "allow",
         "eslint/no-continue": "allow",
