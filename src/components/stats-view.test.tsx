@@ -32,8 +32,8 @@ describe('statistics view', () => {
 
     render(<StatsView onBack={vi.fn<() => void>()} />);
 
-    expect(await screen.findByRole('heading', { name: 'demo' })).toBeDefined();
-    expect(screen.getByRole('heading', { name: 'tema' })).toBeDefined();
+    expect(await screen.findByRole('heading', { name: 'Demo' })).toBeDefined();
+    expect(screen.getByRole('heading', { name: 'Tema' })).toBeDefined();
     expect(screen.getByRole('progressbar', { name: 'Progreso de demo/tema' })).toHaveProperty(
       'value',
       50,
@@ -46,6 +46,21 @@ describe('statistics view', () => {
     ).toHaveProperty('value', 0);
   });
 
+  it('shows the display name of the subject and the topic', async () => {
+    await recordResult({
+      topicId: 'demo/tema-unido',
+      subject: 'demo',
+      topic: 'tema-unido',
+      type: 'card',
+      correct: true,
+    });
+
+    render(<StatsView onBack={vi.fn<() => void>()} />);
+
+    expect(await screen.findByRole('heading', { name: 'Demo' })).toBeDefined();
+    expect(screen.getByRole('heading', { name: 'Tema Unido' })).toBeDefined();
+  });
+
   it('erases stored statistics after reset confirmation and shows no data', async () => {
     await recordResult({
       topicId: 'demo/tema',
@@ -56,7 +71,7 @@ describe('statistics view', () => {
     });
 
     render(<StatsView onBack={vi.fn<() => void>()} />);
-    await screen.findByRole('heading', { name: 'demo' });
+    await screen.findByRole('heading', { name: 'Demo' });
 
     fireEvent.click(screen.getByRole('button', { name: 'Reiniciar estadísticas' }));
     expect(screen.getByRole('dialog')).toBeDefined();

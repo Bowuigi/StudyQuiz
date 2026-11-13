@@ -1,6 +1,7 @@
 import type { JSX } from 'preact';
 import { useState } from 'preact/hooks';
 
+import { formatDisplayName } from '../format.ts';
 import type { QuizItem } from '../quiz.ts';
 import { ActivityStage } from './activity-stage.tsx';
 import type { QuizResult } from './quiz-result.ts';
@@ -47,7 +48,7 @@ export function QuizRunner({ quiz, onResult, onFinished }: QuizRunnerProps): JSX
           <span class="badge badge-ghost">
             {index + 1} de {quiz.length}
           </span>
-          <span class="text-sm text-base-content/60 capitalize">{item.topicName}</span>
+          <span class="text-sm text-base-content/60">{formatDisplayName(item.topicName)}</span>
         </div>
 
         <ActivityStage key={index} item={item} onResult={handleResult} onNext={handleNext} />

@@ -1,6 +1,7 @@
-import { fireEvent, render, screen } from '@testing-library/preact';
+import { fireEvent, render, screen, within } from '@testing-library/preact';
 import { describe, expect, it } from 'vitest';
 
+import { ACTIVITY_TYPES } from './activity-types.ts';
 import { App } from './app.tsx';
 import type { Subject } from './content.ts';
 import { formatDisplayName } from './format.ts';
@@ -62,6 +63,11 @@ const subjects: Array<Subject> = [
               'Fin de la monarquía',
             ],
           },
+          {
+            is: 'card',
+            front: '¿En qué año comenzó la Revolución francesa?',
+            back: '1789.',
+          },
         ],
       },
     ],
@@ -76,6 +82,18 @@ function subjectButtonName(subject: Subject): string {
     `${activities} ${activities === 1 ? 'actividad' : 'actividades'}`,
     `${topics} ${topics === 1 ? 'tema' : 'temas'}`,
   ].join(' ');
+}
+
+function typeCheckboxName(label: string): string {
+  const type = ACTIVITY_TYPES.find(option => option.label === label);
+  if (type === undefined) {
+    throw new Error(`No activity type with label ${label}`);
+  }
+  const count = subjects[0]!.topics.reduce(
+    (total, topic) => total + topic.activities.filter(activity => activity.is === type.type).length,
+    0,
+  );
+  return `${label} (${count})`;
 }
 
 function openHistoria(): void {
@@ -120,7 +138,8 @@ describe('navbar', () => {
 
     fireEvent.click(screen.getByRole('button', { name: subjectButtonName(subjects[0]!) }));
 
-    expect(screen.getByText(formatDisplayName(subjects[0]!.name))).toBeDefined();
+    const navbar = screen.getByRole('banner');
+    expect(within(navbar).getByText(formatDisplayName(subjects[0]!.name))).toBeDefined();
   });
 });
 
@@ -128,9 +147,32 @@ describe('topic view', () => {
   it('opens the topic view for the clicked subject', () => {
     openHistoria();
 
-    expect(screen.getByRole('heading', { name: 'historia' })).toBeDefined();
-    expect(screen.getByRole('checkbox', { name: 'antigua-roma' })).toBeDefined();
-    expect(screen.getByRole('checkbox', { name: 'revolucion-francesa' })).toBeDefined();
+    expect(
+      screen.getByRole('heading', { name: formatDisplayName(subjects[0]!.name) }),
+    ).toBeDefined();
+    expect(screen.getByRole('checkbox', { name: 'Antigua Roma (2)' })).toBeDefined();
+    expect(screen.getByRole('checkbox', { name: 'Revolucion Francesa (3)' })).toBeDefined();
+  });
+
+  it('shows the activity count of every topic and of every type', () => {
+    openHistoria();
+
+    expect(screen.getByRole('checkbox', { name: 'Antigua Roma (2)' })).toBeDefined();
+    expect(screen.getByRole('checkbox', { name: 'Revolucion Francesa (3)' })).toBeDefined();
+    expect(screen.getByRole('checkbox', { name: 'Tarjetas (2)' })).toBeDefined();
+    expect(screen.getByRole('checkbox', { name: 'Relacionar (0)' })).toBeDefined();
+  });
+
+  it('keeps the counts after the user changes a checkbox', () => {
+    openHistoria();
+
+    fireEvent.click(screen.getByRole('checkbox', { name: 'Antigua Roma (2)' }));
+    fireEvent.click(screen.getByRole('checkbox', { name: 'Revolucion Francesa (3)' }));
+
+    expect(screen.getByRole('checkbox', { name: 'Antigua Roma (2)' })).toBeDefined();
+    expect(screen.getByRole('checkbox', { name: 'Revolucion Francesa (3)' })).toBeDefined();
+    expect(screen.getByRole('checkbox', { name: 'Tarjetas (2)' })).toBeDefined();
+    expect(screen.getByRole('checkbox', { name: 'Relacionar (0)' })).toBeDefined();
   });
 
   it('starts with all topic and activity type checkboxes checked', () => {
@@ -152,8 +194,8 @@ describe('Comenzar availability', () => {
     const comenzar = screen.getByRole<HTMLButtonElement>('button', { name: 'Comenzar' });
     expect(comenzar.disabled).toBe(false);
 
-    fireEvent.click(screen.getByRole('checkbox', { name: 'antigua-roma' }));
-    fireEvent.click(screen.getByRole('checkbox', { name: 'revolucion-francesa' }));
+    fireEvent.click(screen.getByRole('checkbox', { name: 'Antigua Roma (2)' }));
+    fireEvent.click(screen.getByRole('checkbox', { name: 'Revolucion Francesa (3)' }));
     expect(comenzar.disabled).toBe(true);
   });
 
@@ -161,7 +203,7 @@ describe('Comenzar availability', () => {
     openHistoria();
 
     for (const label of ACTIVITY_TYPE_LABELS) {
-      fireEvent.click(screen.getByRole('checkbox', { name: label }));
+      fireEvent.click(screen.getByRole('checkbox', { name: typeCheckboxName(label) }));
     }
 
     expect(screen.getByRole<HTMLButtonElement>('button', { name: 'Comenzar' }).disabled).toBe(true);
@@ -183,13 +225,13 @@ describe('quiz building', () => {
   it('caps the quiz at the available count', () => {
     openHistoria();
 
-    expect(screen.getByText('Actividades disponibles: 4')).toBeDefined();
+    expect(screen.getByText('Actividades disponibles: 5')).toBeDefined();
 
     fireEvent.input(screen.getByLabelText('Número de actividades'), {
       target: { value: '99' },
     });
     fireEvent.click(screen.getByRole('button', { name: 'Comenzar' }));
 
-    expect(screen.getByText('1 de 4')).toBeDefined();
+    expect(screen.getByText('1 de 5')).toBeDefined();
   });
 });

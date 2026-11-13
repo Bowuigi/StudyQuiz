@@ -3,6 +3,7 @@ import { useState } from 'preact/hooks';
 
 import { ACTIVITY_TYPES } from '../activity-types.ts';
 import type { Subject, Topic } from '../content.ts';
+import { formatDisplayName } from '../format.ts';
 import type { BuildQuizOptions, QuizActivityType } from '../quiz.ts';
 
 interface TopicViewProps {
@@ -33,30 +34,36 @@ function TopicChecklist({ topics, selected, onToggle }: TopicChecklistProps): JS
     <fieldset class="fieldset">
       <legend class="fieldset-legend">Temas</legend>
       <div class="flex flex-col gap-2">
-        {topics.map(topic => (
-          <label key={topic.id} class="label cursor-pointer justify-start gap-3">
-            <input
-              type="checkbox"
-              class="checkbox checkbox-sm"
-              checked={selected.includes(topic.id)}
-              onChange={() => {
-                onToggle(topic.id);
-              }}
-            />
-            <span>{topic.name}</span>
-          </label>
-        ))}
+        {topics.map(topic => {
+          const activities = topic.activities.length;
+          return (
+            <label key={topic.id} class="label cursor-pointer justify-start gap-3">
+              <input
+                type="checkbox"
+                class="checkbox checkbox-sm"
+                checked={selected.includes(topic.id)}
+                onChange={() => {
+                  onToggle(topic.id);
+                }}
+              />
+              <span>
+                {formatDisplayName(topic.name)} ({activities})
+              </span>
+            </label>
+          );
+        })}
       </div>
     </fieldset>
   );
 }
 
 interface TypeChecklistProps {
+  countByType: Record<QuizActivityType, number>;
   selected: Array<QuizActivityType>;
   onToggle: (type: QuizActivityType) => void;
 }
 
-function TypeChecklist({ selected, onToggle }: TypeChecklistProps): JSX.Element {
+function TypeChecklist({ countByType, selected, onToggle }: TypeChecklistProps): JSX.Element {
   return (
     <fieldset class="fieldset">
       <legend class="fieldset-legend">Tipos de actividad</legend>
@@ -71,7 +78,9 @@ function TypeChecklist({ selected, onToggle }: TypeChecklistProps): JSX.Element 
                 onToggle(option.type);
               }}
             />
-            <span>{option.label}</span>
+            <span>
+              {option.label} ({countByType[option.type]})
+            </span>
           </label>
         ))}
       </div>
@@ -135,7 +144,7 @@ function TopicHeader({ name, onBack }: TopicHeaderProps): JSX.Element {
       <button type="button" class="btn btn-ghost btn-sm" onClick={onBack}>
         Volver
       </button>
-      <h2 class="text-2xl font-bold capitalize">{name}</h2>
+      <h2 class="text-2xl font-bold">{name}</h2>
     </div>
   );
 }
@@ -145,16 +154,26 @@ export function TopicView({ subject, onBack, onStart }: TopicViewProps): JSX.Ele
   const [types, setTypes] = useState(() => ACTIVITY_TYPES.map(option => option.type));
   const [count, setCount] = useState(DEFAULT_COUNT);
 
+  const allActivities = subject.topics.flatMap(topic => topic.activities);
   const available = subject.topics
     .filter(topic => topicIds.includes(topic.id))
     .flatMap(topic => topic.activities)
     .filter(activity => types.includes(activity.is)).length;
 
+  const countByType = Object.fromEntries(
+    ACTIVITY_TYPES.map(
+      option =>
+        [option.type, allActivities.filter(activity => activity.is === option.type).length] as [
+          QuizActivityType,
+          number,
+        ],
+    ),
+  ) as Record<QuizActivityType, number>;
   const canStart = topicIds.length > 0 && types.length > 0;
 
   return (
     <div class="flex flex-col gap-6">
-      <TopicHeader name={subject.name} onBack={onBack} />
+      <TopicHeader name={formatDisplayName(subject.name)} onBack={onBack} />
 
       <div class="card bg-base-100 shadow-sm">
         <div class="card-body gap-6">
@@ -166,6 +185,7 @@ export function TopicView({ subject, onBack, onStart }: TopicViewProps): JSX.Ele
             }}
           />
           <TypeChecklist
+            countByType={countByType}
             selected={types}
             onToggle={type => {
               setTypes(current => toggleValue(current, type));

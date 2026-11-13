@@ -1,6 +1,7 @@
 import type { JSX } from 'preact';
 
 import { ACTIVITY_TYPES } from '../activity-types.ts';
+import { formatDisplayName } from '../format.ts';
 import type { QuizActivityType } from '../quiz.ts';
 import { aggregate, type StatsRecord, type TopicStats } from '../storage.ts';
 import { useStatsRecords } from '../use-stats-records.ts';
@@ -87,7 +88,7 @@ function TopicProgress({ topic, typeSummaries }: TopicProgressProps): JSX.Elemen
   return (
     <article class="card border border-base-300 bg-base-100">
       <div class="card-body gap-4">
-        <h4 class="card-title text-lg capitalize">{topic.topic}</h4>
+        <h4 class="card-title text-lg">{formatDisplayName(topic.topic)}</h4>
         <div class="flex flex-wrap items-center justify-between gap-2 text-sm">
           <span class="font-semibold">{formatPercentage(topic.percentage)} de éxito</span>
           <span class="text-base-content/70">{formatAttempts(topic.attempts)}</span>
@@ -189,7 +190,7 @@ function StatsContent({ records, subjectGroups, loading, error }: StatsContentPr
       <div class="flex flex-col gap-6">
         {subjectGroups.map(group => (
           <section key={group.subject} class="flex flex-col gap-3">
-            <h3 class="text-xl font-bold capitalize">{group.subject}</h3>
+            <h3 class="text-xl font-bold">{formatDisplayName(group.subject)}</h3>
             {group.topics.map(topic => (
               <TopicProgress
                 key={topic.topicId}

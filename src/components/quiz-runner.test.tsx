@@ -120,6 +120,15 @@ describe('result callbacks', () => {
   });
 });
 
+describe('topic name', () => {
+  it('shows the topic name in display form', () => {
+    const item: QuizItem = { ...card, topicName: 'antigua-roma' };
+    render(<QuizRunner quiz={[item]} onResult={resultSpy()} onFinished={finishedSpy()} />);
+
+    expect(screen.getByText('Antigua Roma')).toBeDefined();
+  });
+});
+
 describe('quiz navigation', () => {
   it('advances the progress indicator with Siguiente', () => {
     render(
