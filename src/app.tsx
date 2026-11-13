@@ -5,6 +5,7 @@ import { HomeView } from './components/home-view.tsx';
 import { QuizRunner, type QuizResult } from './components/quiz-runner.tsx';
 import { StatsView } from './components/stats-view.tsx';
 import { SummaryView } from './components/summary-view.tsx';
+import { ThemeSelect } from './components/theme-select.tsx';
 import { TopicView } from './components/topic-view.tsx';
 import { type Subject, loadSubjects } from './content.ts';
 import { formatDisplayName } from './format.ts';
@@ -34,6 +35,9 @@ function AppHeader({ subjectName }: AppHeaderProps): JSX.Element {
             {formatDisplayName(subjectName)}
           </span>
         )}
+      </div>
+      <div class="navbar-end pl-5">
+        <ThemeSelect />
       </div>
     </header>
   );
