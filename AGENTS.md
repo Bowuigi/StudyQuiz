@@ -4,6 +4,8 @@ If a question of yours can be answered by an experiment, experiment. On OpenCode
 
 Do not use em dashes, ever. No marketing fluff either.
 
+Tests must not depend on the files in the `content/` directory. Instead, copy-paste specific samples from `example-content/` into tests.
+
 ## Tech stack
 
 - Typescript (very strict)
