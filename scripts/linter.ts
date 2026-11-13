@@ -1934,7 +1934,7 @@ function runCli(argv: Array<string>): number {
 // ============================================================================
 
 if (import.meta.url === `file://${process.argv[1]}`) {
-  process.exit(runCli(process.argv.slice(2)));
+  process.exitCode = runCli(process.argv.slice(2));
 }
 
 // Exports for testing
