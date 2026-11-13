@@ -19,7 +19,6 @@ export function CompleteWordsActivity({
 
   return (
     <div class="flex flex-col gap-4">
-      <h2 class="text-sm tracking-wide text-base-content/60 uppercase">Completa las palabras</h2>
       <div class="flex flex-wrap items-center gap-1 text-lg leading-relaxed">
         {activity.parts.map((part, partIndex) => {
           if (!part.isBlank) {

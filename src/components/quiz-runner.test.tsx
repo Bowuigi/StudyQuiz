@@ -54,18 +54,36 @@ const card: QuizItem = {
 };
 
 describe('single choice', () => {
-  it('confirms with one click and shows every explanation', () => {
+  it('confirms with one click and shows the answer status', () => {
     const onResult = resultSpy();
     render(<QuizRunner quiz={[singleChoice]} onResult={onResult} onFinished={finishedSpy()} />);
 
-    expect(screen.queryByText('Roma es la capital.')).toBeNull();
+    expect(screen.getByText('Opción única')).toBeDefined();
+    expect(screen.queryByText('Respuesta Correcta')).toBeNull();
 
     fireEvent.click(screen.getByRole('radio', { name: 'Roma' }));
 
-    expect(screen.getByText('Roma es la capital.')).toBeDefined();
-    expect(screen.getByText('París no es la capital.')).toBeDefined();
+    expect(screen.getByText('Respuesta Correcta')).toBeDefined();
+    expect(screen.getByRole('radio', { name: 'Roma' }).getAttribute('class')).toContain(
+      'radio-success',
+    );
     expect(screen.getByRole('button', { name: 'Siguiente' })).toBeDefined();
     expect(onResult).toHaveBeenCalledTimes(1);
+  });
+
+  it('shows Respuesta Incorrecta and radio-error for a wrong answer', () => {
+    const onResult = resultSpy();
+    render(<QuizRunner quiz={[singleChoice]} onResult={onResult} onFinished={finishedSpy()} />);
+
+    fireEvent.click(screen.getByRole('radio', { name: 'París' }));
+
+    expect(screen.getByText('Respuesta Incorrecta')).toBeDefined();
+    expect(screen.getByRole('radio', { name: 'París' }).getAttribute('class')).toContain(
+      'radio-error',
+    );
+    const unselected = screen.getByRole('radio', { name: 'Roma' }).getAttribute('class');
+    expect(unselected).not.toContain('radio-success');
+    expect(unselected).not.toContain('radio-error');
   });
 
   it('disables the options after confirmation', () => {
@@ -79,7 +97,7 @@ describe('single choice', () => {
 });
 
 describe('multiple choice', () => {
-  it('needs Confirmar before it shows explanations', () => {
+  it('needs Confirmar before it shows the answer status', () => {
     render(
       <QuizRunner quiz={[multipleChoice]} onResult={resultSpy()} onFinished={finishedSpy()} />,
     );
@@ -87,14 +105,20 @@ describe('multiple choice', () => {
     fireEvent.click(screen.getByRole('checkbox', { name: '2' }));
     fireEvent.click(screen.getByRole('checkbox', { name: '8' }));
 
-    expect(screen.queryByText('2 es par.')).toBeNull();
+    expect(screen.queryByText('Respuesta Correcta')).toBeNull();
     expect(screen.queryByRole('button', { name: 'Siguiente' })).toBeNull();
 
     fireEvent.click(screen.getByRole('button', { name: 'Confirmar' }));
 
-    expect(screen.getByText('2 es par.')).toBeDefined();
-    expect(screen.getByText('3 es impar.')).toBeDefined();
-    expect(screen.getByText('8 es par.')).toBeDefined();
+    expect(screen.getByText('Opción múltiple')).toBeDefined();
+    expect(screen.getByText('Respuesta Correcta')).toBeDefined();
+    const twoClass = screen.getByRole('checkbox', { name: '2' }).getAttribute('class');
+    const eightClass = screen.getByRole('checkbox', { name: '8' }).getAttribute('class');
+    const threeClass = screen.getByRole('checkbox', { name: '3' }).getAttribute('class');
+    expect(twoClass).toContain('checkbox-success');
+    expect(eightClass).toContain('checkbox-success');
+    expect(threeClass).not.toContain('checkbox-success');
+    expect(threeClass).not.toContain('checkbox-error');
     expect(screen.getByRole('button', { name: 'Siguiente' })).toBeDefined();
     expect(screen.getByRole<HTMLInputElement>('checkbox', { name: '2' }).disabled).toBe(true);
   });
@@ -166,13 +190,16 @@ describe('quiz navigation', () => {
   });
 });
 
-describe('cards', () => {
+describe('card flip', () => {
   it('shows the front, flips to the back on card click, and grades as known', () => {
     const onResult = resultSpy();
     const onFinished = finishedSpy();
     render(<QuizRunner quiz={[card]} onResult={onResult} onFinished={onFinished} />);
 
     expect(screen.getByText('Frente')).toBeDefined();
+    expect(screen.getByText('Tarjetas')).toBeDefined();
+    expect(screen.queryByText('Respuesta Correcta')).toBeNull();
+    expect(screen.queryByText('Respuesta Incorrecta')).toBeNull();
     expect(screen.queryByRole('button', { name: 'Lo sé' })).toBeNull();
     expect(screen.queryByRole('button', { name: 'Me olvidé' })).toBeNull();
     expect(screen.queryByRole('button', { name: 'Mostrar respuesta' })).toBeNull();
@@ -194,7 +221,9 @@ describe('cards', () => {
     expect(onFinished).toHaveBeenCalledTimes(1);
     expect(onFinished.mock.calls[0]?.[0]).toHaveLength(1);
   });
+});
 
+describe('card navigation', () => {
   it('advances to the next activity when the user says Lo sé', () => {
     const onResult = resultSpy();
     const onFinished = finishedSpy();

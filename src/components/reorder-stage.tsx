@@ -3,7 +3,7 @@ import { useState } from 'preact/hooks';
 
 import { type QuizAnswer, gradeAnswer, type QuizItem } from '../quiz.ts';
 import type { ReorderActivity as ReorderData } from '../types.d.ts';
-import { ActivityFeedback } from './activity-feedback.tsx';
+import { ActivityHeader } from './activity-header.tsx';
 import type { QuizResult } from './quiz-result.ts';
 import { ReorderActivity } from './reorder-activity.tsx';
 import { StageActions } from './stage-actions.tsx';
@@ -70,8 +70,8 @@ export function ReorderStage({
 
   return (
     <div class="flex flex-col gap-6">
+      <ActivityHeader type={item.activity.is} status={confirmed ? correct : null} />
       <ReorderActivity activity={activity} order={order} confirmed={confirmed} onMove={move} />
-      {confirmed ? <ActivityFeedback item={item} correct={correct} /> : null}
       <StageActions confirmed={confirmed} onNext={onNext} onConfirm={confirm} />
     </div>
   );

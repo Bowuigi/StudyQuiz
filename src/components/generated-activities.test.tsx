@@ -79,9 +79,8 @@ describe('reorder', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Confirmar' }));
 
     expect(onResult).toHaveBeenLastCalledWith(expect.objectContaining({ correct: true }));
-    expect(screen.getByText('1. Uno')).toBeDefined();
-    expect(screen.getByText('2. Dos')).toBeDefined();
-    expect(screen.getByText('3. Tres')).toBeDefined();
+    expect(screen.getByText('Ordenar')).toBeDefined();
+    expect(screen.getByText('Respuesta Correcta')).toBeDefined();
   });
 
   it('grades a wrong order and still shows the correct-answer panel', () => {
@@ -91,7 +90,8 @@ describe('reorder', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Confirmar' }));
 
     expect(onResult).toHaveBeenLastCalledWith(expect.objectContaining({ correct: false }));
-    expect(screen.getByText('1. Uno')).toBeDefined();
+    expect(screen.getByText('Ordenar')).toBeDefined();
+    expect(screen.getByText('Respuesta Incorrecta')).toBeDefined();
   });
 });
 
@@ -110,8 +110,8 @@ describe('relate', () => {
         answer: { is: 'relate', pairs: { a: '1', b: '2' } },
       }),
     );
-    expect(screen.getByText('a: 1')).toBeDefined();
-    expect(screen.getByText('b: 2')).toBeDefined();
+    expect(screen.getByText('Relacionar')).toBeDefined();
+    expect(screen.getByText('Respuesta Correcta')).toBeDefined();
   });
 
   it('grades a wrong pair as incorrect', () => {
@@ -123,8 +123,8 @@ describe('relate', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Confirmar' }));
 
     expect(onResult).toHaveBeenLastCalledWith(expect.objectContaining({ correct: false }));
-    expect(screen.getByText('a: 1')).toBeDefined();
-    expect(screen.getByText('b: 2')).toBeDefined();
+    expect(screen.getByText('Relacionar')).toBeDefined();
+    expect(screen.getByText('Respuesta Incorrecta')).toBeDefined();
   });
 });
 
@@ -139,7 +139,8 @@ describe('complete words', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Confirmar' }));
 
     expect(onResult).toHaveBeenLastCalledWith(expect.objectContaining({ correct: true }));
-    expect(screen.getByText('El Camión es grande.')).toBeDefined();
+    expect(screen.getByText('Completar palabras')).toBeDefined();
+    expect(screen.getByText('Respuesta Correcta')).toBeDefined();
   });
 
   it('grades a wrong answer as incorrect and disables the input', () => {
@@ -153,6 +154,7 @@ describe('complete words', () => {
 
     expect(onResult).toHaveBeenLastCalledWith(expect.objectContaining({ correct: false }));
     expect(screen.getByRole<HTMLInputElement>('textbox', { name: 'Hueco 1' }).disabled).toBe(true);
-    expect(screen.getByText('El Camión es grande.')).toBeDefined();
+    expect(screen.getByText('Completar palabras')).toBeDefined();
+    expect(screen.getByText('Respuesta Incorrecta')).toBeDefined();
   });
 });
