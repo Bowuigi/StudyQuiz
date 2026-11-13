@@ -461,7 +461,7 @@ function checkLongestOption(
   // Skip true/false pairs
   if (isTrueFalsePair(options)) return;
 
-  const correctLabel = options[correctIndex]?.label || '';
+  const correctLabel = options[correctIndex]?.label ?? '';
   const correctLen = correctLabel.length;
   const incorrectOptions = options.filter((_, i) => i !== correctIndex);
   if (incorrectOptions.length === 0) return;
