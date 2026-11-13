@@ -803,6 +803,38 @@ describe('lintTopicFile - line/column reporting', () => {
     expect(emptyTextError.activityIndex).toBe(1);
     expect(emptyTextError.line).toBeGreaterThan(1);
   });
+
+  it('reports line numbers at activity object boundaries, not nested arrays (regression)', () => {
+    // This test ensures findActivityOffsets tracks { } at array depth 1,
+    // not [ ] of nested arrays like "options"
+    const raw = `[
+  {
+    "is": "multiple-choice",
+    "question": "Q1?",
+    "options": [
+      { "label": "A", "isCorrect": false, "explanation": "Wrong." },
+      { "label": "B", "isCorrect": true, "explanation": "Correct." }
+    ]
+  },
+  {
+    "is": "multiple-choice",
+    "question": "",
+    "options": [
+      { "label": "C", "isCorrect": false, "explanation": "Wrong." },
+      { "label": "D", "isCorrect": true, "explanation": "Correct." }
+    ]
+  }
+]`;
+    const result = lintTopicFile('test.json', raw);
+    const errors = getErrors(result.diagnostics);
+    const emptyTextError = errors.find(e => e.ruleId === 'empty-text')!;
+
+    // The empty question is on line 11 in the raw text above
+    // The activity object starts on line 10
+    // Before the fix, it would report line 8 (end of first activity's options array)
+    expect(emptyTextError.activityIndex).toBe(1);
+    expect(emptyTextError.line).toBe(10); // Activity 2 starts at line 10
+  });
 });
 
 describe('lintContentDirectory', () => {

@@ -343,7 +343,8 @@ function findLineColumn(text: string, offset: number): { line: number; column: n
 
 function findActivityOffsets(rawText: string): Array<{ start: number; end: number }> {
   const offsets: Array<{ start: number; end: number }> = [];
-  let depth = 0;
+  let arrayDepth = 0;
+  let braceDepth = 0;
   let inString = false;
   let escape = false;
   let start = -1;
@@ -361,21 +362,23 @@ function findActivityOffsets(rawText: string): Array<{ start: number; end: numbe
       }
     } else if (ch === '"') {
       inString = true;
-    } else if (ch === '[' && depth === 0) {
-      depth = 1;
-    } else if (ch === '[' && depth === 1) {
-      if (start === -1) {
+    } else if (ch === '[') {
+      arrayDepth++;
+    } else if (ch === ']') {
+      arrayDepth--;
+    } else if (ch === '{' && arrayDepth === 1) {
+      // Start of an activity object (direct child of the outer array)
+      if (braceDepth === 0) {
         start = i;
       }
-      depth++;
-    } else if (ch === ']' && depth > 0) {
-      depth--;
-      if (depth === 1 && start !== -1) {
+      braceDepth++;
+    } else if (ch === '}' && arrayDepth === 1) {
+      braceDepth--;
+      if (braceDepth === 0 && start !== -1) {
+        // End of an activity object
         offsets.push({ start, end: i + 1 });
         start = -1;
       }
-    } else if (ch === '{' && depth === 1 && start === -1) {
-      start = i;
     }
   }
 
