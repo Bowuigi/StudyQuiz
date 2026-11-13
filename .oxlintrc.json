@@ -127,6 +127,35 @@
       "rules": {
         "typescript/consistent-type-definitions": "allow"
       }
+    },
+    {
+      "files": ["scripts/**/*"],
+      "env": {
+        "node": true
+      },
+      "rules": {
+        "no-console": "allow",
+        "max-lines": "allow",
+        "max-lines-per-function": "allow",
+        "max-params": "allow",
+        "complexity": "allow",
+        "no-use-before-define": "allow",
+        "unicorn/switch-case-braces": "allow",
+        "no-useless-assignment": "allow",
+        "unicorn/no-negated-condition": "allow",
+        "eslint/no-negated-condition": "allow",
+        "eslint/no-continue": "allow",
+        "unicorn/prefer-string-replace-all": "allow",
+        "unicorn/text-encoding-identifier-case": "allow",
+        "unicorn/no-process-exit": "allow",
+        "eslint/no-inline-comments": "allow",
+        "eslint/capitalized-comments": "allow",
+        "typescript/prefer-nullish-coalescing": "allow",
+        "typescript/prefer-optional-chain": "allow",
+        "typescript/no-unnecessary-condition": "allow",
+        "typescript/strict-boolean-expressions": "allow",
+        "typescript/no-unsafe-member-access": "allow"
+      }
     }
   ]
 }
