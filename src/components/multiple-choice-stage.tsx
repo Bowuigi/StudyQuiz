@@ -3,7 +3,6 @@ import { useState } from 'preact/hooks';
 
 import { type QuizAnswer, gradeAnswer, type QuizItem } from '../quiz.ts';
 import type { MultipleChoiceActivity as MultipleChoiceData } from '../types.d.ts';
-import { ActivityHeader } from './activity-header.tsx';
 import { MultipleChoiceActivity } from './multiple-choice-activity.tsx';
 import type { QuizResult } from './quiz-result.ts';
 import { StageActions } from './stage-actions.tsx';
@@ -25,7 +24,6 @@ export function MultipleChoiceStage({
 }: MultipleChoiceStageProps): JSX.Element {
   const [selected, setSelected] = useState<Array<number>>([]);
   const [confirmed, setConfirmed] = useState(false);
-  const [correct, setCorrect] = useState(false);
 
   function toggle(optionIndex: number): void {
     if (confirmed) return;
@@ -42,14 +40,12 @@ export function MultipleChoiceStage({
 
     const answer: QuizAnswer = { is: 'multiple-choice', selected };
     const grade = gradeAnswer(item, answer);
-    setCorrect(grade.correct);
     setConfirmed(true);
     onResult({ item, answer, correct: grade.correct });
   }
 
   return (
     <div class="flex flex-col gap-6">
-      <ActivityHeader type={item.activity.is} status={confirmed ? correct : null} />
       <MultipleChoiceActivity
         activity={activity}
         optionOrder={optionOrder}

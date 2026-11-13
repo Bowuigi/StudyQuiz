@@ -3,7 +3,6 @@ import { useState } from 'preact/hooks';
 
 import { type QuizAnswer, gradeAnswer, type QuizItem } from '../quiz.ts';
 import type { CardActivity as CardData } from '../types.d.ts';
-import { ActivityHeader } from './activity-header.tsx';
 import { CardActivity } from './card-activity.tsx';
 import type { QuizResult } from './quiz-result.ts';
 
@@ -26,7 +25,6 @@ export function CardStage({ item, activity, onResult, onNext }: CardStageProps):
 
   return (
     <div class="flex flex-col gap-6">
-      <ActivityHeader type="card" status={null} />
       <CardActivity
         activity={activity}
         flipped={flipped}

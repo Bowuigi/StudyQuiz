@@ -3,7 +3,6 @@ import { useState } from 'preact/hooks';
 
 import { type QuizAnswer, gradeAnswer, normalize, type QuizItem } from '../quiz.ts';
 import type { CompleteWordsActivity as CompleteWordsData } from '../types.d.ts';
-import { ActivityHeader } from './activity-header.tsx';
 import { CompleteWordsActivity } from './complete-words-activity.tsx';
 import type { QuizResult } from './quiz-result.ts';
 import { StageActions } from './stage-actions.tsx';
@@ -26,7 +25,6 @@ export function CompleteWordsStage({
     Array.from({ length: blankCount }, () => ''),
   );
   const [confirmed, setConfirmed] = useState(false);
-  const [correct, setCorrect] = useState(false);
   const [blankCorrect, setBlankCorrect] = useState<Array<boolean | null>>(() =>
     Array.from({ length: blankCount }, () => null),
   );
@@ -48,14 +46,12 @@ export function CompleteWordsStage({
       (part, blankIndex) => normalize(blanks[blankIndex] ?? '') === normalize(part.label),
     );
     setBlankCorrect(marks);
-    setCorrect(grade.correct);
     setConfirmed(true);
     onResult({ item, answer, correct: grade.correct });
   }
 
   return (
     <div class="flex flex-col gap-6">
-      <ActivityHeader type={item.activity.is} status={confirmed ? correct : null} />
       <CompleteWordsActivity
         activity={activity}
         blanks={blanks}

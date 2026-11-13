@@ -3,7 +3,6 @@ import { useState } from 'preact/hooks';
 
 import { type QuizAnswer, gradeAnswer, type QuizItem } from '../quiz.ts';
 import type { SingleChoiceActivity as SingleChoiceData } from '../types.d.ts';
-import { ActivityHeader } from './activity-header.tsx';
 import type { QuizResult } from './quiz-result.ts';
 import { SingleChoiceActivity } from './single-choice-activity.tsx';
 import { StageActions } from './stage-actions.tsx';
@@ -25,7 +24,6 @@ export function SingleChoiceStage({
 }: SingleChoiceStageProps): JSX.Element {
   const [selected, setSelected] = useState<Array<number>>([]);
   const [confirmed, setConfirmed] = useState(false);
-  const [correct, setCorrect] = useState(false);
 
   function confirm(optionIndex: number): void {
     if (confirmed) return;
@@ -33,14 +31,12 @@ export function SingleChoiceStage({
     const answer: QuizAnswer = { is: 'single-choice', selected: optionIndex };
     const grade = gradeAnswer(item, answer);
     setSelected([optionIndex]);
-    setCorrect(grade.correct);
     setConfirmed(true);
     onResult({ item, answer, correct: grade.correct });
   }
 
   return (
     <div class="flex flex-col gap-6">
-      <ActivityHeader type={item.activity.is} status={confirmed ? correct : null} />
       <SingleChoiceActivity
         activity={activity}
         optionOrder={optionOrder}

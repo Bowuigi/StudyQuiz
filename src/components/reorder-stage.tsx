@@ -3,7 +3,6 @@ import { useState } from 'preact/hooks';
 
 import { type QuizAnswer, gradeAnswer, type QuizItem } from '../quiz.ts';
 import type { ReorderActivity as ReorderData } from '../types.d.ts';
-import { ActivityHeader } from './activity-header.tsx';
 import type { QuizResult } from './quiz-result.ts';
 import { ReorderActivity } from './reorder-activity.tsx';
 import { StageActions } from './stage-actions.tsx';
@@ -44,7 +43,6 @@ export function ReorderStage({
     initialOrder(optionOrder, activity.elements.length),
   );
   const [confirmed, setConfirmed] = useState(false);
-  const [correct, setCorrect] = useState(false);
 
   function move(from: number, to: number): void {
     if (confirmed || from === to) return;
@@ -63,14 +61,12 @@ export function ReorderStage({
       }),
     };
     const grade = gradeAnswer(item, answer);
-    setCorrect(grade.correct);
     setConfirmed(true);
     onResult({ item, answer, correct: grade.correct });
   }
 
   return (
     <div class="flex flex-col gap-6">
-      <ActivityHeader type={item.activity.is} status={confirmed ? correct : null} />
       <ReorderActivity activity={activity} order={order} confirmed={confirmed} onMove={move} />
       <StageActions confirmed={confirmed} onNext={onNext} onConfirm={confirm} />
     </div>
