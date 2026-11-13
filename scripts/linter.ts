@@ -1808,7 +1808,7 @@ function lintContentDirectory(contentDir: string): Array<Diagnostic> {
 
     const topics: Array<TopicDiagnostics> = [];
     for (const topicFile of topicFiles) {
-      const rawText = readFileSync(topicFile, 'utf-8');
+      const rawText = readFileSync(topicFile, 'utf8');
       const result = lintTopicFile(topicFile, rawText);
       topics.push(result);
       allDiagnostics.push(...result.diagnostics);
