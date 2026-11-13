@@ -110,7 +110,6 @@
         "unicorn/switch-case-braces": "allow",
         "unicorn/no-negated-condition": "allow",
         "eslint/no-negated-condition": "allow",
-        "eslint/no-continue": "allow",
         "unicorn/no-process-exit": "allow",
         "eslint/no-inline-comments": "allow",
         "eslint/capitalized-comments": "allow",

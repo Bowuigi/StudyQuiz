@@ -1509,31 +1509,32 @@ function lintLongestAlwaysCorrect(
   for (const activity of choiceActivities) {
     const correctIdx = getCorrectOptionIndex(activity)!;
     const options = getOptionLabels(activity);
-    if (options.length === 0) continue;
-    if (isTrueFalsePair(options.map(l => ({ label: l })))) {
-      allLongest = false;
-      break;
+    if (options.length > 0) {
+      if (isTrueFalsePair(options.map(l => ({ label: l })))) {
+        allLongest = false;
+        break;
+      }
+
+      const correctLen = options[correctIdx]!.length;
+      const incorrectLengths = options.filter((_, i) => i !== correctIdx).map(l => l.length);
+      const meanIncorrect = incorrectLengths.reduce((a, b) => a + b, 0) / incorrectLengths.length;
+      const ratio = correctLen / meanIncorrect;
+      const diff = correctLen - meanIncorrect;
+
+      const optionDetails = options
+        .map((l, i) => {
+          const marker = i === correctIdx ? ' (correct)' : '';
+          return `option ${i}: ${l.length} chars${marker}`;
+        })
+        .join('; ');
+
+      if (ratio < CONFIG.longestErrorRatio || diff < CONFIG.longestErrorDiff) {
+        allLongest = false;
+      }
+      details.push(
+        `activity ${activities.indexOf(activity)}: ${optionDetails} (ratio ${ratio.toFixed(2)}, diff ${diff})`,
+      );
     }
-
-    const correctLen = options[correctIdx]!.length;
-    const incorrectLengths = options.filter((_, i) => i !== correctIdx).map(l => l.length);
-    const meanIncorrect = incorrectLengths.reduce((a, b) => a + b, 0) / incorrectLengths.length;
-    const ratio = correctLen / meanIncorrect;
-    const diff = correctLen - meanIncorrect;
-
-    const optionDetails = options
-      .map((l, i) => {
-        const marker = i === correctIdx ? ' (correct)' : '';
-        return `option ${i}: ${l.length} chars${marker}`;
-      })
-      .join('; ');
-
-    if (ratio < CONFIG.longestErrorRatio || diff < CONFIG.longestErrorDiff) {
-      allLongest = false;
-    }
-    details.push(
-      `activity ${activities.indexOf(activity)}: ${optionDetails} (ratio ${ratio.toFixed(2)}, diff ${diff})`,
-    );
   }
 
   if (allLongest) {
@@ -1552,16 +1553,16 @@ function lintLongestAlwaysCorrect(
     for (const activity of choiceActivities) {
       const correctIdx = getCorrectOptionIndex(activity)!;
       const options = getOptionLabels(activity);
-      if (isTrueFalsePair(options.map(l => ({ label: l })))) continue;
+      if (!isTrueFalsePair(options.map(l => ({ label: l })))) {
+        const correctLen = options[correctIdx]!.length;
+        const incorrectLengths = options.filter((_, i) => i !== correctIdx).map(l => l.length);
+        const meanIncorrect = incorrectLengths.reduce((a, b) => a + b, 0) / incorrectLengths.length;
+        const ratio = correctLen / meanIncorrect;
+        const diff = correctLen - meanIncorrect;
 
-      const correctLen = options[correctIdx]!.length;
-      const incorrectLengths = options.filter((_, i) => i !== correctIdx).map(l => l.length);
-      const meanIncorrect = incorrectLengths.reduce((a, b) => a + b, 0) / incorrectLengths.length;
-      const ratio = correctLen / meanIncorrect;
-      const diff = correctLen - meanIncorrect;
-
-      if (ratio >= CONFIG.longestWarningRatio && diff >= CONFIG.longestWarningDiff) {
-        longestCount++;
+        if (ratio >= CONFIG.longestWarningRatio && diff >= CONFIG.longestWarningDiff) {
+          longestCount++;
+        }
       }
     }
 
@@ -1786,7 +1787,6 @@ function lintContentDirectory(contentDir: string): Array<Diagnostic> {
         column: 1,
         scope: 'subject',
       });
-      continue;
     }
 
     // Check for non-JSON files
