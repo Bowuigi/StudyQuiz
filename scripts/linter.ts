@@ -429,18 +429,18 @@ function isTrueFalsePair(options: Array<{ label: string }>): boolean {
 
 function getCorrectOptionIndex(activity: Activity): number | null {
   if (activity.is === 'multiple-choice') {
-    return activity.options?.findIndex(o => o.isCorrect) ?? -1;
+    return activity.options.findIndex(o => o.isCorrect);
   }
   if (activity.is === 'single-choice') {
     // First option is correct
-    return activity.options && activity.options.length > 0 ? 0 : -1;
+    return activity.options.length > 0 ? 0 : -1;
   }
   return null;
 }
 
 function getOptionLabels(activity: Activity): Array<string> {
-  if ((activity.is === 'multiple-choice' || activity.is === 'single-choice') && activity.options) {
-    return activity.options.map(o => o.label ?? '');
+  if (activity.is === 'multiple-choice' || activity.is === 'single-choice') {
+    return activity.options.map(o => o.label);
   }
   return [];
 }
@@ -466,7 +466,7 @@ function checkLongestOption(
   const incorrectOptions = options.filter((_, i) => i !== correctIndex);
   if (incorrectOptions.length === 0) return;
 
-  const incorrectLengths = incorrectOptions.map(o => (o.label ?? '').length);
+  const incorrectLengths = incorrectOptions.map(o => o.label.length);
   const meanIncorrect = incorrectLengths.reduce((a, b) => a + b, 0) / incorrectLengths.length;
   const ratio = correctLen / meanIncorrect;
   const diff = correctLen - meanIncorrect;
@@ -475,7 +475,7 @@ function checkLongestOption(
   const optionDetails = options
     .map((o, i) => {
       const marker = i === correctIndex ? ' (correct)' : '';
-      return `option ${i}: ${(o.label ?? '').length} chars${marker}`;
+      return `option ${i}: ${o.label.length} chars${marker}`;
     })
     .join('; ');
 
@@ -532,7 +532,7 @@ function lintLongestAlwaysCorrect(
     .filter(a => a.is === 'multiple-choice' || a.is === 'single-choice')
     .filter(a => {
       const correctIdx = getCorrectOptionIndex(a);
-      return correctIdx !== null && correctIdx !== -1 && a.options && a.options.length > 0;
+      return correctIdx !== null && correctIdx !== -1 && a.options.length > 0;
     });
 
   if (choiceActivities.length < 3) return;
@@ -642,7 +642,7 @@ function lintMultipleChoice(
   const { question, options } = activity;
 
   // Missing options field
-  if (!options || !Array.isArray(options)) {
+  if (!Array.isArray(options)) {
     diagnostics.push({
       ruleId: 'missing-field',
       severity: 'error',
@@ -657,7 +657,7 @@ function lintMultipleChoice(
   }
 
   // Empty question
-  if (!question?.trim()) {
+  if (!question.trim()) {
     diagnostics.push({
       ruleId: 'empty-text',
       severity: 'error',
@@ -697,7 +697,7 @@ function lintMultipleChoice(
   }
 
   // Check options
-  const labels = options.map(o => o.label ?? '');
+  const labels = options.map(o => o.label);
   const seenLabels = new Map<string, number>();
   for (let i = 0; i < labels.length; i++) {
     const label = labels[i]!.trim();
@@ -871,7 +871,7 @@ function lintSingleChoice(
   const { question, options } = activity;
 
   // Missing options field
-  if (!options || !Array.isArray(options)) {
+  if (!Array.isArray(options)) {
     diagnostics.push({
       ruleId: 'missing-field',
       severity: 'error',
@@ -886,7 +886,7 @@ function lintSingleChoice(
   }
 
   // Empty question
-  if (!question?.trim()) {
+  if (!question.trim()) {
     diagnostics.push({
       ruleId: 'empty-text',
       severity: 'error',
@@ -926,7 +926,7 @@ function lintSingleChoice(
   }
 
   // Check options
-  const labels = options.map(o => o.label ?? '');
+  const labels = options.map(o => o.label);
   const seenLabels = new Map<string, number>();
   for (let i = 0; i < labels.length; i++) {
     const label = labels[i]!.trim();
@@ -1096,7 +1096,7 @@ function lintReorder(
 ): void {
   const { title, elements } = activity;
 
-  if (!title?.trim()) {
+  if (!title.trim()) {
     diagnostics.push({
       ruleId: 'empty-text',
       severity: 'error',
@@ -1150,7 +1150,7 @@ function lintRelate(
 ): void {
   const { title, related } = activity;
 
-  if (!title?.trim()) {
+  if (!title.trim()) {
     diagnostics.push({
       ruleId: 'empty-text',
       severity: 'error',
@@ -1178,7 +1178,7 @@ function lintRelate(
   }
 
   for (const [key, value] of pairs) {
-    if (!key?.trim()) {
+    if (!key.trim()) {
       diagnostics.push({
         ruleId: 'empty-related-value',
         severity: 'error',
@@ -1190,7 +1190,7 @@ function lintRelate(
         scope: 'activity',
       });
     }
-    if (!value?.trim()) {
+    if (!value.trim()) {
       diagnostics.push({
         ruleId: 'empty-related-value',
         severity: 'error',
@@ -1244,7 +1244,7 @@ function lintCompleteWords(
   }
 
   for (const blank of blanks) {
-    const label = blank.label?.trim() || '';
+    const label = blank.label.trim() || '';
     if (!label) {
       diagnostics.push({
         ruleId: 'empty-blank',
@@ -1320,7 +1320,7 @@ function lintCard(
 ): void {
   const { front, back } = activity;
 
-  if (!front?.trim()) {
+  if (!front.trim()) {
     diagnostics.push({
       ruleId: 'empty-card-side',
       severity: 'error',
@@ -1333,7 +1333,7 @@ function lintCard(
     });
   }
 
-  if (!back?.trim()) {
+  if (!back.trim()) {
     diagnostics.push({
       ruleId: 'empty-card-side',
       severity: 'error',
