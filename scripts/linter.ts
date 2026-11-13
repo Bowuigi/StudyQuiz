@@ -745,11 +745,11 @@ function lintMultipleChoice(
       activityIndex,
       scope: 'activity',
     });
-  } else if (!question.trim().endsWith('?')) {
+  } else if (!question.trim().includes('?')) {
     diagnostics.push({
       ruleId: 'question-without-question-mark',
       severity: 'warning',
-      message: 'Choice question should end with "?"',
+      message: 'Choice question should contain a question mark "?"',
       filePath,
       line: baseLine,
       column: baseColumn,
@@ -904,11 +904,11 @@ function lintSingleChoice(
       activityIndex,
       scope: 'activity',
     });
-  } else if (!question.trim().endsWith('?')) {
+  } else if (!question.trim().includes('?')) {
     diagnostics.push({
       ruleId: 'question-without-question-mark',
       severity: 'warning',
-      message: 'Choice question should end with "?"',
+      message: 'Choice question should contain a question mark "?"',
       filePath,
       line: baseLine,
       column: baseColumn,
@@ -1232,7 +1232,9 @@ function lintCompleteWords(
   const fullText = parts.map(p => p.label).join('');
   if (
     /"|'|«|»|“|”|‘|’/.test(fullText) ||
-    /\b(dice|dijo|escribe|escribió|cita|citó)\b/i.test(fullText)
+    // \b treats accented letters as non-word chars, so /\bcita\b/ would wrongly
+    // Match inside "implícita". Use negative lookaround instead.
+    /(?<![a-záéíóúüñ])(?:dice|dijo|escribe|escribió|cita|citó)(?![a-záéíóúüñ])/i.test(fullText)
   ) {
     diagnostics.push({
       ruleId: 'quote-in-complete-words',
@@ -1781,10 +1783,11 @@ function lintContentDirectory(contentDir: string): Array<Diagnostic> {
     allDiagnostics.push(...lintSubjectLevel(sd));
   }
 
-  // Unexpected file location (files directly in content/)
+  // Unexpected file location (files directly in content/). .keep is required
+  // For git to track the otherwise-empty directory, so it is exempt.
   const rootFiles = readdirSync(contentDir).filter(f => {
     const fullPath = join(contentDir, f);
-    return statSync(fullPath).isFile();
+    return statSync(fullPath).isFile() && f !== '.keep';
   });
   for (const f of rootFiles) {
     allDiagnostics.push({

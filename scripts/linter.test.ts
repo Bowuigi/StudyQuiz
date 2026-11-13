@@ -545,6 +545,22 @@ describe('lintTopicFile - complete-words validation', () => {
     const warnings = getWarnings(result.diagnostics);
     expect(hasRule(warnings, 'quote-in-complete-words')).toBe(true);
   });
+
+  it('does not report quote-in-complete-words when attribution verb is a substring of another word', () => {
+    // 'cita' appears inside 'implícita', but \b treats accented letters as
+    // Non-word chars, so /\bcita\b/ would wrongly match inside 'implícita'.
+    const activity: Activity = {
+      ...VALID_COMPLETE_WORDS,
+      parts: [
+        { isBlank: false, label: 'KDD es la extracción no trivial de información ' },
+        { isBlank: true, label: 'implícita' },
+        { isBlank: false, label: ' y potencialmente útil.' },
+      ],
+    };
+    const result = lintTopicFile('test.json', createTopicFile([activity]));
+    const warnings = getWarnings(result.diagnostics);
+    expect(hasRule(warnings, 'quote-in-complete-words')).toBe(false);
+  });
 });
 
 describe('lintTopicFile - card validation', () => {
