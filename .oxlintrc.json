@@ -105,7 +105,6 @@
         "max-params": "allow",
         "max-statements": "allow",
         "complexity": "allow",
-        "unicorn/no-negated-condition": "allow",
         "eslint/no-negated-condition": "allow"
       }
     }

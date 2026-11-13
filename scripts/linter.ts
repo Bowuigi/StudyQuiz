@@ -1245,7 +1245,7 @@ function lintCompleteWords(
 
   for (const blank of blanks) {
     const label = blank.label.trim() || '';
-    if (!label) {
+    if (label === '') {
       diagnostics.push({
         ruleId: 'empty-blank',
         severity: 'error',
@@ -1872,9 +1872,9 @@ function formatDiagnostics(diagnostics: Array<Diagnostic>): string {
 
     const prefix = d.severity === 'error' ? '✗ ERROR' : '⚠ WARNING';
     const location =
-      d.activityIndex !== undefined
-        ? ` (activity ${d.activityIndex}, line ${d.line}, col ${d.column})`
-        : ` (line ${d.line}, col ${d.column})`;
+      d.activityIndex === undefined
+        ? ` (line ${d.line}, col ${d.column})`
+        : ` (activity ${d.activityIndex}, line ${d.line}, col ${d.column})`;
     output += `  [${d.ruleId}] ${prefix}${location}: ${d.message}\n`;
   }
 
