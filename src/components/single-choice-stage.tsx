@@ -8,13 +8,13 @@ import type { QuizResult } from './quiz-result.ts';
 import { SingleChoiceActivity } from './single-choice-activity.tsx';
 import { StageActions } from './stage-actions.tsx';
 
-interface SingleChoiceStageProps {
+type SingleChoiceStageProps = {
   item: QuizItem;
   activity: SingleChoiceData;
   optionOrder: Array<number>;
   onResult: (result: QuizResult) => void;
   onNext: () => void;
-}
+};
 
 export function SingleChoiceStage({
   item,

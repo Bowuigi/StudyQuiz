@@ -14,14 +14,14 @@ import { type QuizSession, useQuizSession } from './use-quiz-session.ts';
 
 type View = 'home' | 'topics' | 'quiz' | 'summary' | 'stats';
 
-export interface AppProps {
+export type AppProps = {
   subjects?: Array<Subject>;
   now?: () => number;
-}
+};
 
-interface AppHeaderProps {
+type AppHeaderProps = {
   subjectName: string | null;
-}
+};
 
 function AppHeader({ subjectName }: AppHeaderProps): JSX.Element {
   return (
@@ -43,7 +43,7 @@ function AppHeader({ subjectName }: AppHeaderProps): JSX.Element {
   );
 }
 
-interface AppContentProps {
+type AppContentProps = {
   subjects: Array<Subject>;
   view: View;
   subject: Subject | null;
@@ -55,7 +55,7 @@ interface AppContentProps {
   onResult: (result: QuizResult) => void;
   onFinished: (results: Array<QuizResult>) => void;
   onOpenStats: () => void;
-}
+};
 
 function AppContent(props: AppContentProps): JSX.Element {
   const { session, subject, subjects, view, subjectName } = props;

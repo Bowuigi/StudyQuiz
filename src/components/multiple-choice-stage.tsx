@@ -8,13 +8,13 @@ import { MultipleChoiceActivity } from './multiple-choice-activity.tsx';
 import type { QuizResult } from './quiz-result.ts';
 import { StageActions } from './stage-actions.tsx';
 
-interface MultipleChoiceStageProps {
+type MultipleChoiceStageProps = {
   item: QuizItem;
   activity: MultipleChoiceData;
   optionOrder: Array<number>;
   onResult: (result: QuizResult) => void;
   onNext: () => void;
-}
+};
 
 export function MultipleChoiceStage({
   item,

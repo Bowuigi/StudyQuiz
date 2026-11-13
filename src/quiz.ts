@@ -5,55 +5,55 @@ export type QuizActivityType = QuizActivity['is'];
 
 export type RandomFn = () => number;
 
-export interface BuildQuizOptions {
+export type BuildQuizOptions = {
   topicIds: Array<string>;
   types: Array<QuizActivityType>;
   count: number;
   random?: RandomFn;
-}
+};
 
-export interface QuizItem {
+export type QuizItem = {
   topicId: string;
   topicName: string;
   activity: QuizActivity;
   /** Display order of the options. Each value is an index into the activity options. */
   optionOrder: Array<number>;
-}
+};
 
-export interface Grade {
+export type Grade = {
   correct: boolean;
   correctAnswer: string;
-}
+};
 
-export interface SingleChoiceAnswer {
+export type SingleChoiceAnswer = {
   is: 'single-choice';
   selected: number;
-}
+};
 
-export interface MultipleChoiceAnswer {
+export type MultipleChoiceAnswer = {
   is: 'multiple-choice';
   selected: Array<number>;
-}
+};
 
-export interface ReorderAnswer {
+export type ReorderAnswer = {
   is: 'reorder';
   order: Array<string>;
-}
+};
 
-export interface RelateAnswer {
+export type RelateAnswer = {
   is: 'relate';
   pairs: Record<string, string>;
-}
+};
 
-export interface CompleteWordsAnswer {
+export type CompleteWordsAnswer = {
   is: 'complete-words';
   blanks: Array<string>;
-}
+};
 
-export interface CardAnswer {
+export type CardAnswer = {
   is: 'card';
   known: boolean;
-}
+};
 
 export type QuizAnswer =
   | SingleChoiceAnswer

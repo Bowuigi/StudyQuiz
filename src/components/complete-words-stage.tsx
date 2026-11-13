@@ -8,12 +8,12 @@ import { CompleteWordsActivity } from './complete-words-activity.tsx';
 import type { QuizResult } from './quiz-result.ts';
 import { StageActions } from './stage-actions.tsx';
 
-interface CompleteWordsStageProps {
+type CompleteWordsStageProps = {
   item: QuizItem;
   activity: CompleteWordsData;
   onResult: (result: QuizResult) => void;
   onNext: () => void;
-}
+};
 
 export function CompleteWordsStage({
   item,

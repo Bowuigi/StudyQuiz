@@ -2,12 +2,12 @@ import type { JSX } from 'preact';
 
 import type { CardActivity as CardData } from '../types.d.ts';
 
-interface CardActivityProps {
+type CardActivityProps = {
   activity: CardData;
   flipped: boolean;
   onFlip: () => void;
   onGrade: (known: boolean) => void;
-}
+};
 
 export function CardActivity({
   activity,

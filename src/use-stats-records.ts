@@ -3,7 +3,7 @@ import { useState } from 'preact/hooks';
 import { resetStats } from './storage.ts';
 import { useLoadedStats } from './use-loaded-stats.ts';
 
-export interface StatsRecordsState {
+export type StatsRecordsState = {
   records: ReturnType<typeof useLoadedStats>['records'];
   loading: boolean;
   confirmingReset: boolean;
@@ -12,7 +12,7 @@ export interface StatsRecordsState {
   openReset: () => void;
   cancelReset: () => void;
   confirmReset: () => void;
-}
+};
 
 export function useStatsRecords(): StatsRecordsState {
   const loaded = useLoadedStats();

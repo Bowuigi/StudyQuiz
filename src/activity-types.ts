@@ -1,9 +1,9 @@
 import type { QuizActivityType } from './quiz.ts';
 
-export interface ActivityTypeOption {
+export type ActivityTypeOption = {
   type: QuizActivityType;
   label: string;
-}
+};
 
 export const ACTIVITY_TYPES: Array<ActivityTypeOption> = [
   { type: 'multiple-choice', label: 'Opción múltiple' },

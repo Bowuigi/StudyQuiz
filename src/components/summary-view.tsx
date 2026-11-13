@@ -4,11 +4,11 @@ import { activityTitle, summaryExplanationLines, userAnswerLines } from '../answ
 import { correctAnswerLines } from '../quiz.ts';
 import type { QuizResult } from './quiz-result.ts';
 
-interface SummaryViewProps {
+type SummaryViewProps = {
   results: Array<QuizResult>;
   elapsedSeconds: number;
   onHome: () => void;
-}
+};
 
 function formatPercentage(value: number): string {
   return `${Number(value.toFixed(1))}%`;
@@ -21,12 +21,12 @@ function formatDuration(seconds: number): string {
   return `${minutes} min ${remainingSeconds} s`;
 }
 
-interface SummaryStatsProps {
+type SummaryStatsProps = {
   correct: number;
   wrong: number;
   percentage: number;
   elapsedSeconds: number;
-}
+};
 
 function SummaryStats({
   correct,
@@ -64,10 +64,10 @@ function SummaryStats({
   );
 }
 
-interface AnswerBlockProps {
+type AnswerBlockProps = {
   title: string;
   lines: Array<string>;
-}
+};
 
 function AnswerBlock({ title, lines }: AnswerBlockProps): JSX.Element {
   return (
@@ -86,9 +86,9 @@ function AnswerBlock({ title, lines }: AnswerBlockProps): JSX.Element {
   );
 }
 
-interface WrongActivityCardProps {
+type WrongActivityCardProps = {
   result: QuizResult;
-}
+};
 
 function WrongActivityCard({ result }: WrongActivityCardProps): JSX.Element {
   const title = activityTitle(result.item.activity);

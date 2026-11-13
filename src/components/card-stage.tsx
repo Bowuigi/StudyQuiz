@@ -7,12 +7,12 @@ import { ActivityHeader } from './activity-header.tsx';
 import { CardActivity } from './card-activity.tsx';
 import type { QuizResult } from './quiz-result.ts';
 
-interface CardStageProps {
+type CardStageProps = {
   item: QuizItem;
   activity: CardData;
   onResult: (result: QuizResult) => void;
   onNext: () => void;
-}
+};
 
 export function CardStage({ item, activity, onResult, onNext }: CardStageProps): JSX.Element {
   const [flipped, setFlipped] = useState(false);

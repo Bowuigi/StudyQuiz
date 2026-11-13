@@ -2,13 +2,13 @@ import type { JSX } from 'preact';
 
 import type { MultipleChoiceActivity as MultipleChoiceData } from '../types.d.ts';
 
-interface MultipleChoiceActivityProps {
+type MultipleChoiceActivityProps = {
   activity: MultipleChoiceData;
   optionOrder: Array<number>;
   selected: Array<number>;
   confirmed: boolean;
   onToggle: (optionIndex: number) => void;
-}
+};
 
 function optionLetter(index: number): string {
   return String.fromCodePoint(65 + index);

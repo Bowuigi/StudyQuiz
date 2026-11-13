@@ -2,13 +2,13 @@ import type { JSX } from 'preact';
 
 import type { SingleChoiceActivity as SingleChoiceData } from '../types.d.ts';
 
-interface SingleChoiceActivityProps {
+type SingleChoiceActivityProps = {
   activity: SingleChoiceData;
   optionOrder: Array<number>;
   selected: Array<number>;
   confirmed: boolean;
   onSelect: (optionIndex: number) => void;
-}
+};
 
 function optionLetter(index: number): string {
   return String.fromCodePoint(65 + index);

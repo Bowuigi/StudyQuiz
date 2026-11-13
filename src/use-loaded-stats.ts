@@ -2,12 +2,12 @@ import { useEffect, useState } from 'preact/hooks';
 
 import { getStats, type StatsRecord } from './storage.ts';
 
-export interface LoadedStats {
+export type LoadedStats = {
   records: Array<StatsRecord>;
   loading: boolean;
   loadError: string | null;
   setRecords: (records: Array<StatsRecord>) => void;
-}
+};
 
 export function useLoadedStats(): LoadedStats {
   const [records, setRecords] = useState<Array<StatsRecord>>([]);

@@ -3,10 +3,10 @@ import type { JSX } from 'preact';
 import { ACTIVITY_TYPES } from '../activity-types.ts';
 import type { QuizActivityType } from '../quiz.ts';
 
-interface ActivityHeaderProps {
+type ActivityHeaderProps = {
   type: QuizActivityType;
   status: boolean | null;
-}
+};
 
 export function ActivityHeader({ type, status }: ActivityHeaderProps): JSX.Element {
   const { label } = ACTIVITY_TYPES.find(option => option.type === type) ?? { label: type };

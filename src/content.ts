@@ -1,16 +1,16 @@
 import type { QuizActivity } from './types.d.ts';
 
-export interface Topic {
+export type Topic = {
   id: string;
   subject: string;
   name: string;
   activities: Array<QuizActivity>;
-}
+};
 
-export interface Subject {
+export type Subject = {
   name: string;
   topics: Array<Topic>;
-}
+};
 
 const contentModules = import.meta.glob<Array<QuizActivity>>('../content/**/*.json', {
   eager: true,

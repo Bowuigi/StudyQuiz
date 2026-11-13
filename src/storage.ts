@@ -1,42 +1,42 @@
 import type { QuizActivityType } from './quiz.ts';
 
-export interface ResultInput {
+export type ResultInput = {
   topicId: string;
   subject: string;
   topic: string;
   type: QuizActivityType;
   correct: boolean;
-}
+};
 
-export interface StatsRecord {
+export type StatsRecord = {
   topicId: string;
   subject: string;
   topic: string;
   type: QuizActivityType;
   correct: number;
   attempts: number;
-}
+};
 
-export interface TopicStats {
+export type TopicStats = {
   topicId: string;
   subject: string;
   topic: string;
   correct: number;
   attempts: number;
   percentage: number;
-}
+};
 
-export interface TypeStats {
+export type TypeStats = {
   type: QuizActivityType;
   correct: number;
   attempts: number;
   percentage: number;
-}
+};
 
-export interface Aggregate {
+export type Aggregate = {
   topics: Array<TopicStats>;
   types: Array<TypeStats>;
-}
+};
 
 const DATABASE_NAME = 'study-quiz';
 const DATABASE_VERSION = 1;

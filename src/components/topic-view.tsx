@@ -6,11 +6,11 @@ import type { Subject, Topic } from '../content.ts';
 import { formatDisplayName } from '../format.ts';
 import type { BuildQuizOptions, QuizActivityType } from '../quiz.ts';
 
-interface TopicViewProps {
+type TopicViewProps = {
   subject: Subject;
   onBack: () => void;
   onStart: (options: BuildQuizOptions) => void;
-}
+};
 
 const DEFAULT_COUNT = 10;
 
@@ -23,11 +23,11 @@ function toggleValue<T>(values: Array<T>, value: T): Array<T> {
   return values.includes(value) ? values.filter(current => current !== value) : [...values, value];
 }
 
-interface TopicChecklistProps {
+type TopicChecklistProps = {
   topics: Array<Topic>;
   selected: Array<string>;
   onToggle: (topicId: string) => void;
-}
+};
 
 function TopicChecklist({ topics, selected, onToggle }: TopicChecklistProps): JSX.Element {
   return (
@@ -57,11 +57,11 @@ function TopicChecklist({ topics, selected, onToggle }: TopicChecklistProps): JS
   );
 }
 
-interface TypeChecklistProps {
+type TypeChecklistProps = {
   countByType: Record<QuizActivityType, number>;
   selected: Array<QuizActivityType>;
   onToggle: (type: QuizActivityType) => void;
-}
+};
 
 function TypeChecklist({ countByType, selected, onToggle }: TypeChecklistProps): JSX.Element {
   return (
@@ -88,11 +88,11 @@ function TypeChecklist({ countByType, selected, onToggle }: TypeChecklistProps):
   );
 }
 
-interface CountFieldProps {
+type CountFieldProps = {
   count: number;
   available: number;
   onChange: (value: string) => void;
-}
+};
 
 function CountField({ count, available, onChange }: CountFieldProps): JSX.Element {
   return (
@@ -118,10 +118,10 @@ function CountField({ count, available, onChange }: CountFieldProps): JSX.Elemen
   );
 }
 
-interface StartActionsProps {
+type StartActionsProps = {
   canStart: boolean;
   onStart: () => void;
-}
+};
 
 function StartActions({ canStart, onStart }: StartActionsProps): JSX.Element {
   return (
@@ -133,10 +133,10 @@ function StartActions({ canStart, onStart }: StartActionsProps): JSX.Element {
   );
 }
 
-interface TopicHeaderProps {
+type TopicHeaderProps = {
   name: string;
   onBack: () => void;
-}
+};
 
 function TopicHeader({ name, onBack }: TopicHeaderProps): JSX.Element {
   return (

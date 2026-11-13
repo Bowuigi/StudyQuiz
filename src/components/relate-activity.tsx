@@ -16,12 +16,12 @@ function shuffleOptions(values: Array<string>): Array<string> {
   return shuffled;
 }
 
-interface RelateActivityProps {
+type RelateActivityProps = {
   activity: RelateData;
   pairs: Record<string, string>;
   confirmed: boolean;
   onSelect: (key: string, value: string) => void;
-}
+};
 
 export function RelateActivity({
   activity,

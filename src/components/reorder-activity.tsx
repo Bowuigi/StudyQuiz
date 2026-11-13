@@ -3,12 +3,12 @@ import { useRef } from 'preact/hooks';
 
 import type { ReorderActivity as ReorderData } from '../types.d.ts';
 
-interface ReorderActivityProps {
+type ReorderActivityProps = {
   activity: ReorderData;
   order: Array<number>;
   confirmed: boolean;
   onMove: (from: number, to: number) => void;
-}
+};
 
 export function ReorderActivity({
   activity,

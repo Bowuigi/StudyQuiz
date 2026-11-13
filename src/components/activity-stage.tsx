@@ -9,11 +9,11 @@ import { RelateStage } from './relate-stage.tsx';
 import { ReorderStage } from './reorder-stage.tsx';
 import { SingleChoiceStage } from './single-choice-stage.tsx';
 
-interface ActivityStageProps {
+type ActivityStageProps = {
   item: QuizItem;
   onResult: (result: QuizResult) => void;
   onNext: () => void;
-}
+};
 
 function ChoiceStage({ item, onResult, onNext }: ActivityStageProps): JSX.Element {
   const { activity } = item;

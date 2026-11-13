@@ -8,13 +8,13 @@ import type { QuizResult } from './quiz-result.ts';
 import { ReorderActivity } from './reorder-activity.tsx';
 import { StageActions } from './stage-actions.tsx';
 
-interface ReorderStageProps {
+type ReorderStageProps = {
   item: QuizItem;
   activity: ReorderData;
   optionOrder: Array<number>;
   onResult: (result: QuizResult) => void;
   onNext: () => void;
-}
+};
 
 function initialOrder(optionOrder: Array<number>, length: number): Array<number> {
   if (optionOrder.length === length) {

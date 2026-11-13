@@ -1,10 +1,10 @@
 import type { JSX } from 'preact';
 
-interface StageActionsProps {
+type StageActionsProps = {
   confirmed: boolean;
   onNext: () => void;
   onConfirm?: () => void;
-}
+};
 
 export function StageActions({ confirmed, onNext, onConfirm }: StageActionsProps): JSX.Element {
   return (

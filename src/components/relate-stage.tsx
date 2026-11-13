@@ -8,12 +8,12 @@ import type { QuizResult } from './quiz-result.ts';
 import { RelateActivity } from './relate-activity.tsx';
 import { StageActions } from './stage-actions.tsx';
 
-interface RelateStageProps {
+type RelateStageProps = {
   item: QuizItem;
   activity: RelateData;
   onResult: (result: QuizResult) => void;
   onNext: () => void;
-}
+};
 
 export function RelateStage({ item, activity, onResult, onNext }: RelateStageProps): JSX.Element {
   const [pairs, setPairs] = useState<Record<string, string>>({});

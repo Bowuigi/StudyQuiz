@@ -261,7 +261,7 @@ const CONFIG = {
 
 type Severity = 'error' | 'warning';
 
-interface Diagnostic {
+type Diagnostic = {
   ruleId: string;
   severity: Severity;
   message: string;
@@ -270,37 +270,37 @@ interface Diagnostic {
   column: number;
   activityIndex?: number;
   scope: 'file' | 'activity' | 'topic' | 'subject';
-}
+};
 
 // JSON shapes (mirroring src/types.d.ts)
-interface MultipleChoiceActivity {
+type MultipleChoiceActivity = {
   question: string;
   options: Array<{ label: string; isCorrect: boolean; explanation: string }>;
-}
+};
 
-interface SingleChoiceActivity {
+type SingleChoiceActivity = {
   question: string;
   options: Array<{ label: string; explanation: string }>;
-}
+};
 
-interface ReorderActivity {
+type ReorderActivity = {
   title: string;
   elements: Array<string>;
-}
+};
 
-interface RelateActivity {
+type RelateActivity = {
   title: string;
   related: Record<string, string>;
-}
+};
 
-interface CompleteWordsActivity {
+type CompleteWordsActivity = {
   parts: Array<{ isBlank: boolean; label: string }>;
-}
+};
 
-interface CardActivity {
+type CardActivity = {
   front: string;
   back: string;
-}
+};
 
 type Activity =
   | ({ is: 'multiple-choice' } & MultipleChoiceActivity)
@@ -310,18 +310,18 @@ type Activity =
   | ({ is: 'complete-words' } & CompleteWordsActivity)
   | ({ is: 'card' } & CardActivity);
 
-interface TopicDiagnostics {
+type TopicDiagnostics = {
   filePath: string;
   activities: Array<Activity>;
   diagnostics: Array<Diagnostic>;
   rawText: string;
-}
+};
 
-interface SubjectDiagnostics {
+type SubjectDiagnostics = {
   subject: string;
   topics: Array<TopicDiagnostics>;
   diagnostics: Array<Diagnostic>;
-}
+};
 
 // ============================================================================
 // Utility functions

@@ -5,12 +5,12 @@ import type { Subject } from './content.ts';
 import { type BuildQuizOptions, buildQuiz, type QuizItem } from './quiz.ts';
 import { recordResult as saveResult } from './storage.ts';
 
-interface SessionState {
+type SessionState = {
   quiz: Array<QuizItem>;
   results: Array<QuizResult>;
   startedAt: number | null;
   finishedAt: number | null;
-}
+};
 
 type SessionAction =
   | { type: 'start'; quiz: Array<QuizItem>; startedAt: number | null }
@@ -75,7 +75,7 @@ async function persistResult(subjects: Array<Subject>, result: QuizResult): Prom
   });
 }
 
-export interface QuizSession {
+export type QuizSession = {
   quiz: Array<QuizItem>;
   results: Array<QuizResult>;
   elapsedSeconds: number;
@@ -84,7 +84,7 @@ export interface QuizSession {
   recordResult: (result: QuizResult) => void;
   finishQuiz: (results: Array<QuizResult>) => void;
   reset: () => void;
-}
+};
 
 export function useQuizSession(subjects: Array<Subject>, now: () => number): QuizSession {
   const [state, dispatch] = useReducer(sessionReducer, initialState);

@@ -2,13 +2,13 @@ import type { JSX } from 'preact';
 
 import type { CompleteWordsActivity as CompleteWordsData } from '../types.d.ts';
 
-interface CompleteWordsActivityProps {
+type CompleteWordsActivityProps = {
   activity: CompleteWordsData;
   blanks: Array<string>;
   confirmed: boolean;
   correctness: Array<boolean | null>;
   onChange: (index: number, value: string) => void;
-}
+};
 
 function renderBlank({
   index,

@@ -3,11 +3,11 @@ import type { JSX } from 'preact';
 import type { Subject } from '../content.ts';
 import { formatDisplayName } from '../format.ts';
 
-interface HomeViewProps {
+type HomeViewProps = {
   subjects: Array<Subject>;
   onSelectSubject: (subject: Subject) => void;
   onOpenStats: () => void;
-}
+};
 
 function countActivities(subject: Subject): number {
   return subject.topics.reduce((total, topic) => total + topic.activities.length, 0);

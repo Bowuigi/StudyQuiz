@@ -8,11 +8,11 @@ import type { QuizResult } from './quiz-result.ts';
 
 export type { QuizResult } from './quiz-result.ts';
 
-interface QuizRunnerProps {
+type QuizRunnerProps = {
   quiz: Array<QuizItem>;
   onResult: (result: QuizResult) => void;
   onFinished: (results: Array<QuizResult>) => void;
-}
+};
 
 export function QuizRunner({ quiz, onResult, onFinished }: QuizRunnerProps): JSX.Element {
   const [index, setIndex] = useState(0);

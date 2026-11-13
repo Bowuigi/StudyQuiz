@@ -6,21 +6,21 @@ import type { QuizActivityType } from '../quiz.ts';
 import { aggregate, type StatsRecord, type TopicStats } from '../storage.ts';
 import { useStatsRecords } from '../use-stats-records.ts';
 
-interface StatsViewProps {
+type StatsViewProps = {
   onBack: () => void;
-}
+};
 
-interface TopicTypeSummary {
+type TopicTypeSummary = {
   type: QuizActivityType;
   correct: number;
   attempts: number;
   percentage: number;
-}
+};
 
-interface SubjectGroup {
+type SubjectGroup = {
   subject: string;
   topics: Array<TopicStats>;
-}
+};
 
 function formatPercentage(value: number): string {
   return `${Number(value.toFixed(1))}%`;
@@ -79,10 +79,10 @@ function summarizeTopicTypes(
     );
 }
 
-interface TopicProgressProps {
+type TopicProgressProps = {
   topic: TopicStats;
   typeSummaries: Array<TopicTypeSummary>;
-}
+};
 
 function TopicProgress({ topic, typeSummaries }: TopicProgressProps): JSX.Element {
   return (
@@ -126,12 +126,12 @@ function TopicProgress({ topic, typeSummaries }: TopicProgressProps): JSX.Elemen
   );
 }
 
-interface ResetDialogProps {
+type ResetDialogProps = {
   open: boolean;
   resetting: boolean;
   onCancel: () => void;
   onConfirm: () => void;
-}
+};
 
 function ResetDialog({ open, resetting, onCancel, onConfirm }: ResetDialogProps): JSX.Element {
   if (!open) return <></>;
@@ -165,12 +165,12 @@ function ResetDialog({ open, resetting, onCancel, onConfirm }: ResetDialogProps)
   );
 }
 
-interface StatsContentProps {
+type StatsContentProps = {
   records: Array<StatsRecord>;
   subjectGroups: Array<SubjectGroup>;
   loading: boolean;
   error: string | null;
-}
+};
 
 function StatsContent({ records, subjectGroups, loading, error }: StatsContentProps): JSX.Element {
   if (error === null) {
