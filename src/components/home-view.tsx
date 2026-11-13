@@ -20,7 +20,7 @@ function subjectCard(subject: Subject, onSelectSubject: (subject: Subject) => vo
   return (
     <button
       type="button"
-      class="card card-border bg-base-100 shadow-sm"
+      class="card card-border bg-base-200 shadow-sm"
       onClick={() => {
         onSelectSubject(subject);
       }}>
