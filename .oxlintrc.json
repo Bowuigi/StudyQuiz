@@ -100,7 +100,6 @@
         "node": true
       },
       "rules": {
-        "no-console": "allow",
         "max-lines": "allow",
         "max-lines-per-function": "allow",
         "max-params": "allow",

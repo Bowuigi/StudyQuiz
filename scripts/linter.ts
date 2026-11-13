@@ -1745,8 +1745,8 @@ function lintContentDirectory(contentDir: string): Array<Diagnostic> {
   const allDiagnostics: Array<Diagnostic> = [];
 
   if (!existsSync(contentDir)) {
-    console.log(
-      `Content directory "${contentDir}" does not exist (content/ is gitignored, this is normal)`,
+    process.stdout.write(
+      `Content directory "${contentDir}" does not exist (content/ is gitignored, this is normal)\n`,
     );
     return allDiagnostics;
   }
@@ -1904,10 +1904,10 @@ function runCli(argv: Array<string>): number {
     } else if (arg === '--strict') {
       strict = true;
     } else if (arg === '--help' || arg === '-h') {
-      console.log('Usage: node scripts/linter.ts [--dir <path>] [--json] [--strict]');
-      console.log('  --dir <path>   Content directory (default: content)');
-      console.log('  --json         Output machine-readable JSON');
-      console.log('  --strict       Treat warnings as errors (exit code 1)');
+      process.stdout.write('Usage: node scripts/linter.ts [--dir <path>] [--json] [--strict]\n');
+      process.stdout.write('  --dir <path>   Content directory (default: content)\n');
+      process.stdout.write('  --json         Output machine-readable JSON\n');
+      process.stdout.write('  --strict       Treat warnings as errors (exit code 1)\n');
       return 0;
     }
   }
@@ -1915,9 +1915,9 @@ function runCli(argv: Array<string>): number {
   const diagnostics = lintContentDirectory(contentDir);
 
   if (jsonOutput) {
-    console.log(formatDiagnosticsJson(diagnostics));
+    process.stdout.write(`${formatDiagnosticsJson(diagnostics)}\n`);
   } else {
-    console.log(formatDiagnostics(diagnostics));
+    process.stdout.write(formatDiagnostics(diagnostics));
   }
 
   const hasErrors = diagnostics.some(d => d.severity === 'error');
