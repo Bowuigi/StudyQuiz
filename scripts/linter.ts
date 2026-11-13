@@ -1167,7 +1167,7 @@ function lintCompleteWords(
 
       // Check if blank is a filler word
       if (words.length > 0) {
-        const firstWord = words[0]!.toLowerCase().replace(/[.,;:!?]/g, '');
+        const firstWord = words[0]!.toLowerCase().replaceAll(/[.,;:!?]/g, '');
         if (CONFIG.fillerWords.has(firstWord)) {
           diagnostics.push({
             ruleId: 'blank-not-essential',
@@ -1585,7 +1585,7 @@ function isSpanish(text: string): boolean {
   let spanishCount = 0;
 
   for (const word of words) {
-    const clean = word.replace(/[^a-záéíóúüñ]/g, '');
+    const clean = word.replaceAll(/[^a-záéíóúüñ]/g, '');
     if (CONFIG.englishMarkers.has(clean)) englishCount++;
     if (CONFIG.spanishMarkers.has(clean)) spanishCount++;
   }

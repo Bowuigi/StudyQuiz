@@ -112,7 +112,6 @@
         "unicorn/no-negated-condition": "allow",
         "eslint/no-negated-condition": "allow",
         "eslint/no-continue": "allow",
-        "unicorn/prefer-string-replace-all": "allow",
         "unicorn/no-process-exit": "allow",
         "eslint/no-inline-comments": "allow",
         "eslint/capitalized-comments": "allow",
