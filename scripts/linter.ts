@@ -4,6 +4,7 @@
 
 import { readFileSync, readdirSync, statSync, existsSync } from 'node:fs';
 import path from 'node:path';
+import { styleText } from 'node:util';
 const { join, relative, dirname, basename } = path;
 
 // ============================================================================
@@ -1823,7 +1824,7 @@ function formatDiagnostics(diagnostics: Array<Diagnostic>): string {
   for (const d of sorted) {
     if (d.filePath !== currentFile) {
       currentFile = d.filePath;
-      output += `\n${currentFile}:\n`;
+      output += `\n${styleText(['bold', 'white'], currentFile)}:\n`;
     }
 
     const prefix = d.severity === 'error' ? '✗ ERROR' : '⚠ WARNING';
@@ -1831,7 +1832,9 @@ function formatDiagnostics(diagnostics: Array<Diagnostic>): string {
       d.activityIndex === undefined
         ? ` (line ${d.line}, col ${d.column})`
         : ` (activity ${d.activityIndex}, line ${d.line}, col ${d.column})`;
-    output += `  [${d.ruleId}] ${prefix}${location}: ${d.message}\n`;
+    const ruleIdStyle =
+      d.severity === 'error' ? (['bold', 'red'] as const) : (['bold', 'yellow'] as const);
+    output += `  ${styleText(ruleIdStyle, `[${d.ruleId}]`)} ${prefix}${location}: ${d.message}\n`;
   }
 
   output += `\nSummary: ${errors.length} error(s), ${warnings.length} warning(s)\n`;
