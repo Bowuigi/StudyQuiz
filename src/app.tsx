@@ -1,3 +1,4 @@
+import { BookOpen } from 'lucide-preact';
 import type { JSX } from 'preact';
 import { useState } from 'preact/hooks';
 
@@ -27,7 +28,10 @@ function AppHeader({ subjectName }: AppHeaderProps): JSX.Element {
   return (
     <header class="navbar bg-base-100 shadow-sm">
       <div class="navbar-start pl-5 flex items-center gap-3">
-        <h1 class="text-xl font-bold tracking-tight">StudyQuiz</h1>
+        <h1 class="text-xl font-bold tracking-tight flex items-center gap-2">
+          <BookOpen size="1em" />
+          StudyQuiz
+        </h1>
         {subjectName === null ? (
           <span class="text-sm text-base-content/70">¡Estudiemos!</span>
         ) : (
@@ -36,7 +40,7 @@ function AppHeader({ subjectName }: AppHeaderProps): JSX.Element {
           </span>
         )}
       </div>
-      <div class="navbar-end pl-5">
+      <div class="navbar-end pr-5">
         <ThemeSelect />
       </div>
     </header>

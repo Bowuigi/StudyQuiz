@@ -1,3 +1,4 @@
+import { Check, X } from 'lucide-preact';
 import type { JSX } from 'preact';
 
 import type { CardActivity as CardData } from '../types.d.ts';
@@ -40,6 +41,7 @@ export function CardActivity({
             onClick={() => {
               onGrade(true);
             }}>
+            <Check size="1.2em" />
             Lo sé
           </button>
           <button
@@ -48,6 +50,7 @@ export function CardActivity({
             onClick={() => {
               onGrade(false);
             }}>
+            <X size="1.2em" />
             Me olvidé
           </button>
         </div>

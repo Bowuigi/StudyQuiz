@@ -1,3 +1,4 @@
+import { Palette } from 'lucide-preact';
 import type { JSX } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
 
@@ -34,9 +35,6 @@ export function ThemeSelect(): JSX.Element {
 
   return (
     <div class="flex items-center gap-2">
-      <label class="label cursor-pointer" htmlFor="theme-select">
-        <span class="label-text">Tema</span>
-      </label>
       <select id="theme-select" class="select select-sm" value={theme} onChange={onChange}>
         {THEMES.map(option => (
           <option key={option} value={option}>
@@ -44,6 +42,11 @@ export function ThemeSelect(): JSX.Element {
           </option>
         ))}
       </select>
+      <label class="label cursor-pointer" htmlFor="theme-select">
+        <span class="label-text flex items-center gap-2">
+          <Palette size="1.3em" aria-label="Tema" aria-hidden="false" />
+        </span>
+      </label>
     </div>
   );
 }

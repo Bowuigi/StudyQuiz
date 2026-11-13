@@ -1,3 +1,4 @@
+import { BarChart3, Book } from 'lucide-preact';
 import type { JSX } from 'preact';
 
 import type { Subject } from '../content.ts';
@@ -25,7 +26,10 @@ function subjectCard(subject: Subject, onSelectSubject: (subject: Subject) => vo
         onSelectSubject(subject);
       }}>
       <div class="card-body p-4 flex flex-col items-center justify-center gap-1 text-center">
-        <h3 class="card-title text-base">{formatDisplayName(subject.name)}</h3>
+        <div class="flex flex-row items-center gap-1">
+          <Book size="1.2em" class="text-base-content" />
+          <h3 class="card-title text-base">{formatDisplayName(subject.name)}</h3>
+        </div>
         <p class="text-sm text-base-content/70">
           {activities} {activities === 1 ? 'actividad' : 'actividades'}
         </p>
@@ -63,6 +67,7 @@ export function HomeView({ subjects, onSelectSubject, onOpenStats }: HomeViewPro
           <p class="text-base-content/70">Revisa tu progreso por tema y tipo de actividad.</p>
           <div class="card-actions">
             <button type="button" class="btn" onClick={onOpenStats}>
+              <BarChart3 size="1em" />
               Ver estadísticas
             </button>
           </div>

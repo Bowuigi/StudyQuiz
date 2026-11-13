@@ -1,3 +1,4 @@
+import { GripVertical } from 'lucide-preact';
 import type { JSX } from 'preact';
 import { useRef } from 'preact/hooks';
 
@@ -48,6 +49,7 @@ export function ReorderActivity({
                   dragged.current = null;
                 }
               }}>
+              <GripVertical size="1em" class="opacity-50 mr-2" />
               {confirmed && (
                 <span
                   class={`text-2xl font-bold mr-3 ${isRightPosition ? 'text-success' : 'text-error'}`}>

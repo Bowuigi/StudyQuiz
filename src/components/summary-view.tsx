@@ -1,3 +1,12 @@
+import {
+  ArrowLeft,
+  CircleCheck,
+  CircleX,
+  Clock,
+  MessageCircle,
+  TriangleAlert,
+  User,
+} from 'lucide-preact';
 import type { JSX } from 'preact';
 
 import { activityTitle, summaryExplanationLines, userAnswerLines } from '../answer-description.ts';
@@ -37,26 +46,38 @@ function SummaryStats({
   return (
     <div class="stats stats-vertical w-full sm:stats-horizontal">
       <div class="stat">
-        <div class="stat-title">Respuestas correctas</div>
+        <div class="stat-title flex items-center gap-2">
+          <CircleCheck size="1em" />
+          Respuestas correctas
+        </div>
         <div class="stat-value text-success" data-testid="summary-correct-count">
           {correct}
         </div>
         <div class="stat-desc">Respuestas acertadas</div>
       </div>
       <div class="stat">
-        <div class="stat-title">Respuestas incorrectas</div>
+        <div class="stat-title flex items-center gap-2">
+          <CircleX size="1em" />
+          Respuestas incorrectas
+        </div>
         <div class="stat-value text-error" data-testid="summary-wrong-count">
           {wrong}
         </div>
         <div class="stat-desc">Respuestas falladas</div>
       </div>
       <div class="stat">
-        <div class="stat-title">Éxito total</div>
+        <div class="stat-title flex items-center gap-2">
+          <CircleCheck size="1em" />
+          Éxito total
+        </div>
         <div class="stat-value">{formatPercentage(percentage)}</div>
         <div class="stat-desc">Porcentaje de aciertos</div>
       </div>
       <div class="stat">
-        <div class="stat-title">Tiempo transcurrido</div>
+        <div class="stat-title flex items-center gap-2">
+          <Clock size="1em" />
+          Tiempo transcurrido
+        </div>
         <div class="stat-value">{formatDuration(elapsedSeconds)}</div>
         <div class="stat-desc">Minutos y segundos</div>
       </div>
@@ -66,13 +87,17 @@ function SummaryStats({
 
 type AnswerBlockProps = {
   title: string;
+  icon?: JSX.Element;
   lines: Array<string>;
 };
 
-function AnswerBlock({ title, lines }: AnswerBlockProps): JSX.Element {
+function AnswerBlock({ title, icon, lines }: AnswerBlockProps): JSX.Element {
   return (
     <div>
-      <p class="font-semibold">{title}</p>
+      <p class="font-semibold flex items-center gap-2">
+        {icon}
+        {title}
+      </p>
       {lines.length > 0 ? (
         lines.map((line, index) => (
           <p key={`${line}-${index}`} class="text-base-content/80">
@@ -100,9 +125,17 @@ function WrongActivityCard({ result }: WrongActivityCardProps): JSX.Element {
     <article class="card border border-base-300 bg-base-100" data-testid="wrong-activity">
       <div class="card-body gap-4">
         <h3 class="card-title text-lg">{title}</h3>
-        <AnswerBlock title="Tu respuesta" lines={userAnswer} />
-        <AnswerBlock title="Respuesta correcta" lines={correctAnswer} />
-        <AnswerBlock title="Explicaciones" lines={explanations} />
+        <AnswerBlock title="Tu respuesta" icon={<User size="1em" />} lines={userAnswer} />
+        <AnswerBlock
+          title="Respuesta correcta"
+          icon={<CircleCheck size="1em" />}
+          lines={correctAnswer}
+        />
+        <AnswerBlock
+          title="Explicaciones"
+          icon={<MessageCircle size="1em" />}
+          lines={explanations}
+        />
       </div>
     </article>
   );
@@ -129,7 +162,10 @@ export function SummaryView({ results, elapsedSeconds, onHome }: SummaryViewProp
       </div>
 
       <section class="flex flex-col gap-4">
-        <h3 class="text-xl font-bold">Actividades incorrectas</h3>
+        <h3 class="text-xl font-bold flex items-center gap-2">
+          <TriangleAlert size="1em" />
+          Actividades incorrectas
+        </h3>
         {wrongResults.length === 0 ? (
           <div class="alert alert-success" role="alert">
             <span>Has acertado todas las actividades.</span>
@@ -143,6 +179,7 @@ export function SummaryView({ results, elapsedSeconds, onHome }: SummaryViewProp
 
       <div class="card-actions justify-end">
         <button type="button" class="btn btn-primary" onClick={onHome}>
+          <ArrowLeft size="1em" />
           Volver al inicio
         </button>
       </div>

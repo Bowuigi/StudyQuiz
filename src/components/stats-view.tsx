@@ -1,3 +1,4 @@
+import { BarChart3, TriangleAlert } from 'lucide-preact';
 import type { JSX } from 'preact';
 
 import { ACTIVITY_TYPES } from '../activity-types.ts';
@@ -220,7 +221,10 @@ export function StatsView({ onBack }: StatsViewProps): JSX.Element {
     <div class="flex flex-col gap-6">
       <div class="card bg-base-100 shadow-sm">
         <div class="card-body gap-4">
-          <h2 class="card-title">Estadísticas</h2>
+          <h2 class="card-title flex items-center gap-2">
+            <BarChart3 size="1em" />
+            Estadísticas
+          </h2>
           <p class="text-base-content/70">Revisa tu progreso por tema y tipo de actividad.</p>
           <StatsContent
             records={state.records}
@@ -233,6 +237,7 @@ export function StatsView({ onBack }: StatsViewProps): JSX.Element {
               Volver al inicio
             </button>
             <button type="button" class="btn btn-error" onClick={state.openReset}>
+              <TriangleAlert size="1em" />
               Reiniciar estadísticas
             </button>
           </div>

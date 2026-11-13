@@ -1,3 +1,4 @@
+import { ArrowLeft, Play } from 'lucide-preact';
 import type { JSX } from 'preact';
 import { useState } from 'preact/hooks';
 
@@ -127,6 +128,7 @@ function StartActions({ canStart, onStart }: StartActionsProps): JSX.Element {
   return (
     <div class="card-actions justify-end">
       <button type="button" class="btn btn-primary" disabled={!canStart} onClick={onStart}>
+        <Play size="1em" />
         Comenzar
       </button>
     </div>
@@ -142,7 +144,7 @@ function TopicHeader({ name, onBack }: TopicHeaderProps): JSX.Element {
   return (
     <div class="flex flex-wrap items-center gap-3">
       <button type="button" class="btn btn-ghost btn-sm" onClick={onBack}>
-        Volver
+        <ArrowLeft size="2.5em" />
       </button>
       <h2 class="text-2xl font-bold">{name}</h2>
     </div>
