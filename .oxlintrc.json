@@ -22,11 +22,6 @@
     "id-length": "allow",
     "no-plusplus": "allow",
     "no-warning-comments": "warn",
-    "max-lines": ["error", 350],
-    "max-lines-per-function": ["error", 60],
-    "max-classes-per-file": ["error", 3],
-    "max-params": ["error", 6],
-    "max-statements": ["allow", 15],
     "no-magic-numbers": "allow",
     "no-optional-chaining": "allow",
     "no-ternary": "allow",
@@ -61,9 +56,14 @@
     "unicorn/no-await-expression-member": "warn",
     "unicorn/no-console-spaces": "warn",
     "unicorn/no-immediate-mutation": "warn",
-    "unicorn/no-process-exit": "warn",
+    "unicorn/no-process-exit": "error",
 
-    "new-cap": ["error", { "capIsNewExceptions": ["CodeJar"] }],
+    "max-lines": ["error", 350],
+    "max-lines-per-function": ["error", 60],
+    "max-classes-per-file": ["error", 3],
+    "max-params": ["error", 6],
+    "max-statements": ["error", 25],
+    "typescript/consistent-type-definitions": ["error", "type"],
     "typescript/explicit-function-return-type": ["error", { "allowExpressions": true }],
     "typescript/array-type": ["error", { "default": "generic" }],
     "unicorn/max-nested-calls": ["error", { "max": 5 }],
@@ -89,43 +89,9 @@
   },
   "overrides": [
     {
-      "files": ["packages/validator/modules/*"],
-      "rules": {
-        "no-unused-vars": "allow"
-      }
-    },
-    {
-      "files": ["packages/cli/main.ts"],
-      "rules": {
-        "no-console": "allow"
-      },
-      "env": {
-        "node": true
-      }
-    },
-    {
-      "files": ["packages/inferencer/mk-codegen.ts"],
-      "rules": {
-        "no-inline-comments": "allow",
-        "capitalized-comments": "allow"
-      }
-    },
-    {
-      "files": ["packages/playground/**/*"],
-      "env": {
-        "browser": true
-      }
-    },
-    {
       "files": ["src/**/*"],
       "env": {
         "browser": true
-      }
-    },
-    {
-      "files": ["**/*.d.ts"],
-      "rules": {
-        "typescript/consistent-type-definitions": "allow"
       }
     },
     {
