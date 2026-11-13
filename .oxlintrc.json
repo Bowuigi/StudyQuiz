@@ -107,7 +107,6 @@
         "complexity": "allow",
         "unicorn/no-negated-condition": "allow",
         "eslint/no-negated-condition": "allow",
-        "typescript/prefer-optional-chain": "allow",
         "typescript/no-unnecessary-condition": "allow",
         "typescript/strict-boolean-expressions": "allow",
         "typescript/no-unsafe-member-access": "allow"

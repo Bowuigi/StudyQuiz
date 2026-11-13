@@ -657,7 +657,7 @@ function lintMultipleChoice(
   }
 
   // Empty question
-  if (!question || !question.trim()) {
+  if (!question?.trim()) {
     diagnostics.push({
       ruleId: 'empty-text',
       severity: 'error',
@@ -886,7 +886,7 @@ function lintSingleChoice(
   }
 
   // Empty question
-  if (!question || !question.trim()) {
+  if (!question?.trim()) {
     diagnostics.push({
       ruleId: 'empty-text',
       severity: 'error',
@@ -1096,7 +1096,7 @@ function lintReorder(
 ): void {
   const { title, elements } = activity;
 
-  if (!title || !title.trim()) {
+  if (!title?.trim()) {
     diagnostics.push({
       ruleId: 'empty-text',
       severity: 'error',
@@ -1150,7 +1150,7 @@ function lintRelate(
 ): void {
   const { title, related } = activity;
 
-  if (!title || !title.trim()) {
+  if (!title?.trim()) {
     diagnostics.push({
       ruleId: 'empty-text',
       severity: 'error',
@@ -1178,7 +1178,7 @@ function lintRelate(
   }
 
   for (const [key, value] of pairs) {
-    if (!key || !key.trim()) {
+    if (!key?.trim()) {
       diagnostics.push({
         ruleId: 'empty-related-value',
         severity: 'error',
@@ -1190,7 +1190,7 @@ function lintRelate(
         scope: 'activity',
       });
     }
-    if (!value || !value.trim()) {
+    if (!value?.trim()) {
       diagnostics.push({
         ruleId: 'empty-related-value',
         severity: 'error',
@@ -1320,7 +1320,7 @@ function lintCard(
 ): void {
   const { front, back } = activity;
 
-  if (!front || !front.trim()) {
+  if (!front?.trim()) {
     diagnostics.push({
       ruleId: 'empty-card-side',
       severity: 'error',
@@ -1333,7 +1333,7 @@ function lintCard(
     });
   }
 
-  if (!back || !back.trim()) {
+  if (!back?.trim()) {
     diagnostics.push({
       ruleId: 'empty-card-side',
       severity: 'error',
