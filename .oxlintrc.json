@@ -107,7 +107,6 @@
         "max-statements": "allow",
         "complexity": "allow",
         "no-use-before-define": "allow",
-        "unicorn/switch-case-braces": "allow",
         "unicorn/no-negated-condition": "allow",
         "eslint/no-negated-condition": "allow",
         "unicorn/no-process-exit": "allow",
