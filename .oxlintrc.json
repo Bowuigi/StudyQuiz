@@ -103,8 +103,7 @@
         "max-lines": "allow",
         "max-lines-per-function": "allow",
         "max-params": "allow",
-        "max-statements": "allow",
-        "complexity": "allow"
+        "max-statements": "allow"
       }
     }
   ]

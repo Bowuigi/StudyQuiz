@@ -629,74 +629,14 @@ function isSpanish(text: string): boolean {
   return !(englishCount >= 2 && spanishCount === 0);
 }
 
-function lintMultipleChoice(
-  activity: MultipleChoiceActivity & { is: 'multiple-choice' },
+function lintChoiceOptions(
+  options: Array<{ label: string; explanation: string }>,
   activityIndex: number,
   filePath: string,
   baseLine: number,
   baseColumn: number,
-  rawText: string,
-  activityStartOffset: number,
   diagnostics: Array<Diagnostic>,
 ): void {
-  const { question, options } = activity;
-
-  // Missing options field
-  if (!Array.isArray(options)) {
-    diagnostics.push({
-      ruleId: 'missing-field',
-      severity: 'error',
-      message: 'Multiple-choice activity must have an options array',
-      filePath,
-      line: baseLine,
-      column: baseColumn,
-      activityIndex,
-      scope: 'activity',
-    });
-    return;
-  }
-
-  // Empty question
-  if (!question.trim()) {
-    diagnostics.push({
-      ruleId: 'empty-text',
-      severity: 'error',
-      message: 'Question must be a non-empty string',
-      filePath,
-      line: baseLine,
-      column: baseColumn,
-      activityIndex,
-      scope: 'activity',
-    });
-  } else if (!question.trim().endsWith('?')) {
-    diagnostics.push({
-      ruleId: 'question-without-question-mark',
-      severity: 'warning',
-      message: 'Choice question should end with "?"',
-      filePath,
-      line: baseLine,
-      column: baseColumn,
-      activityIndex,
-      scope: 'activity',
-    });
-  }
-
-  // Too few options
-  if (options.length < 2) {
-    diagnostics.push({
-      ruleId: 'too-few-options',
-      severity: 'error',
-      message: 'Multiple-choice activity needs at least two options',
-      filePath,
-      line: baseLine,
-      column: baseColumn,
-      activityIndex,
-      scope: 'activity',
-    });
-    return;
-  }
-
-  // Check options
   const labels = options.map(o => o.label);
   const seenLabels = new Map<string, number>();
   for (let i = 0; i < labels.length; i++) {
@@ -767,6 +707,76 @@ function lintMultipleChoice(
       });
     }
   }
+}
+
+function lintMultipleChoice(
+  activity: MultipleChoiceActivity & { is: 'multiple-choice' },
+  activityIndex: number,
+  filePath: string,
+  baseLine: number,
+  baseColumn: number,
+  rawText: string,
+  activityStartOffset: number,
+  diagnostics: Array<Diagnostic>,
+): void {
+  const { question, options } = activity;
+
+  // Missing options field
+  if (!Array.isArray(options)) {
+    diagnostics.push({
+      ruleId: 'missing-field',
+      severity: 'error',
+      message: 'Multiple-choice activity must have an options array',
+      filePath,
+      line: baseLine,
+      column: baseColumn,
+      activityIndex,
+      scope: 'activity',
+    });
+    return;
+  }
+
+  // Empty question
+  if (!question.trim()) {
+    diagnostics.push({
+      ruleId: 'empty-text',
+      severity: 'error',
+      message: 'Question must be a non-empty string',
+      filePath,
+      line: baseLine,
+      column: baseColumn,
+      activityIndex,
+      scope: 'activity',
+    });
+  } else if (!question.trim().endsWith('?')) {
+    diagnostics.push({
+      ruleId: 'question-without-question-mark',
+      severity: 'warning',
+      message: 'Choice question should end with "?"',
+      filePath,
+      line: baseLine,
+      column: baseColumn,
+      activityIndex,
+      scope: 'activity',
+    });
+  }
+
+  // Too few options
+  if (options.length < 2) {
+    diagnostics.push({
+      ruleId: 'too-few-options',
+      severity: 'error',
+      message: 'Multiple-choice activity needs at least two options',
+      filePath,
+      line: baseLine,
+      column: baseColumn,
+      activityIndex,
+      scope: 'activity',
+    });
+    return;
+  }
+
+  lintChoiceOptions(options, activityIndex, filePath, baseLine, baseColumn, diagnostics);
 
   // Check isCorrect presence
   const correctCount = options.filter(o => o.isCorrect).length;
@@ -925,76 +935,7 @@ function lintSingleChoice(
     return;
   }
 
-  // Check options
-  const labels = options.map(o => o.label);
-  const seenLabels = new Map<string, number>();
-  for (let i = 0; i < labels.length; i++) {
-    const label = labels[i]!.trim();
-    if (seenLabels.has(label)) {
-      diagnostics.push({
-        ruleId: 'duplicate-option',
-        severity: 'error',
-        message: `Duplicate option label "${label}" at index ${i} (first at index ${seenLabels.get(label)})`,
-        filePath,
-        line: baseLine,
-        column: baseColumn,
-        activityIndex,
-        scope: 'activity',
-      });
-    } else {
-      seenLabels.set(label, i);
-    }
-
-    if (!label) {
-      diagnostics.push({
-        ruleId: 'empty-text',
-        severity: 'error',
-        message: `Option ${i} label must be a non-empty string`,
-        filePath,
-        line: baseLine,
-        column: baseColumn,
-        activityIndex,
-        scope: 'activity',
-      });
-    }
-
-    // Missing/empty explanation
-    const explanation = options[i]!.explanation.trim();
-    if (!explanation) {
-      diagnostics.push({
-        ruleId: 'empty-explanation',
-        severity: 'error',
-        message: `Option ${i} ("${label}") has an empty explanation`,
-        filePath,
-        line: baseLine,
-        column: baseColumn,
-        activityIndex,
-        scope: 'activity',
-      });
-    } else if (CONFIG.explanationOnlyPatterns.some(p => p.test(explanation))) {
-      diagnostics.push({
-        ruleId: 'explanation-too-short',
-        severity: 'warning',
-        message: `Option ${i} ("${label}") explanation only says "${explanation}" without saying why`,
-        filePath,
-        line: baseLine,
-        column: baseColumn,
-        activityIndex,
-        scope: 'activity',
-      });
-    } else if (explanation.length < CONFIG.shortExplanationChars) {
-      diagnostics.push({
-        ruleId: 'explanation-too-short',
-        severity: 'warning',
-        message: `Option ${i} ("${label}") explanation is only ${explanation.length} chars (below ${CONFIG.shortExplanationChars})`,
-        filePath,
-        line: baseLine,
-        column: baseColumn,
-        activityIndex,
-        scope: 'activity',
-      });
-    }
-  }
+  lintChoiceOptions(options, activityIndex, filePath, baseLine, baseColumn, diagnostics);
 
   // In single-choice, first option is correct - check for isCorrect field (should not exist)
   for (let i = 0; i < options.length; i++) {
@@ -1432,7 +1373,7 @@ function lintActivity(
 }
 
 // Topic-level checks
-function lintTopicLevel(
+function lintDuplicateActivity(
   activities: Array<Activity>,
   filePath: string,
   diagnostics: Array<Diagnostic>,
@@ -1457,7 +1398,13 @@ function lintTopicLevel(
       activityKeys.set(key, i);
     }
   }
+}
 
+function lintRepeatedQuestions(
+  activities: Array<Activity>,
+  filePath: string,
+  diagnostics: Array<Diagnostic>,
+): void {
   // Repeated questions
   const questionMap = new Map<string, Array<number>>();
   for (let i = 0; i < activities.length; i++) {
@@ -1485,6 +1432,15 @@ function lintTopicLevel(
       }
     }
   }
+}
+
+function lintTopicLevel(
+  activities: Array<Activity>,
+  filePath: string,
+  diagnostics: Array<Diagnostic>,
+): void {
+  lintDuplicateActivity(activities, filePath, diagnostics);
+  lintRepeatedQuestions(activities, filePath, diagnostics);
 
   // Similar questions (Jaccard)
   const choiceActivities = activities.filter(
