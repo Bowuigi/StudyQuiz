@@ -4,7 +4,7 @@
 
 Improve the StudyQuiz interface with these changes:
 
-1. The home page shows the subjects as a grid of squares. Each square shows the subject title, the number of activities, and the number of topics. The page shows no total for all subjects.
+1. The home page shows the subjects as a grid of rectangles. Each rectangle shows the subject title, the number of activities, and the number of topics. The page shows no total for all subjects.
 2. The navbar shows the picked subject. It shows "¡Estudiemos!" when no subject is picked.
 3. The topic view shows the number of activities for each topic and for each activity type.
 4. Every graded activity shows "Respuesta Correcta" or "Respuesta Incorrecta" under its activity type caption. The separate feedback card at the bottom is gone.
@@ -99,13 +99,13 @@ The acceptance criteria of a phase are the definition of done.
 
 ### Phase 1: Display names, subject grid, and navbar subject
 
-**Goal of phase 1**: The home page shows the subjects as squares. The navbar shows the picked subject or "¡Estudiemos!".
+**Goal of phase 1**: The home page shows the subjects as rectangles. The navbar shows the picked subject or "¡Estudiemos!".
 
 **Description of phase 1**:
 
 Add a new module `src/format.ts` with one function. The function takes a name and returns the display name. It replaces `-` and `_` with a space, it uppercases the first letter of each word, it keeps the rest of each word as it is, it removes the repeated spaces, and it trims the result. Add `src/format.test.ts` with the cases "data-mining-2" to "Data Mining 2", "bi_casos" to "Bi Casos", "NASA" to "NASA", and "ayd2-p2" to "Ayd2 P2".
 
-Change `src/components/home-view.tsx`. Replace the vertical list of subject buttons with a grid. Use one column on a small screen, two columns on a medium screen, and three columns on a large screen. Each subject is a button with the daisyUI card classes, a shadow, and the `aspect-square` class. The body of the card shows the display name of the subject, the number of activities, and the number of topics. The number of activities is the sum of the activities of every topic of the subject. The number of topics is the number of topics of the subject. Write "1 actividad" and "1 tema" for the singular forms. Keep the "Intentar" card, its title, and its description. Put the grid inside the body of that card. The page shows no total for all subjects.
+Change `src/components/home-view.tsx`. Replace the vertical list of subject buttons with a grid. Use one column on a small screen, two columns on a medium screen, and three columns on a large screen. Each subject is a button with the daisyUI card classes, a shadow, and some padding. The body of the card shows the display name of the subject, the number of activities, and the number of topics. The number of activities is the sum of the activities of every topic of the subject. The number of topics is the number of topics of the subject. Write "1 actividad" and "1 tema" for the singular forms. Keep the "Intentar" card, its title, and its description. Put the grid inside the body of that card. The page shows no total for all subjects.
 
 Change `src/app.tsx`. The `AppHeader` component takes the name of the subject or `null`. The start of the navbar shows the brand "StudyQuiz" and, next to it, the display name of the subject. It shows "¡Estudiemos!" when the subject is `null`. The `AppContent` component passes the name of the current subject. The subject stays selected until the user goes back to the home page.
 
@@ -113,7 +113,7 @@ Change `src/app.tsx`. The `AppHeader` component takes the name of the subject or
 
 Agent-tested:
 
-- The home page shows the subjects as squares. Each square shows the title, the number of activities, and the number of topics.
+- The home page shows the subjects as rectangles. Each rectangle shows the title, the number of activities, and the number of topics.
 - The home page shows no total for all the subjects.
 - The navbar shows "¡Estudiemos!" on the home page.
 - The navbar shows the name of the subject after the user picks a subject.
