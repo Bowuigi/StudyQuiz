@@ -183,7 +183,7 @@ describe('complete words', () => {
     expect(screen.getByText('Respuesta Correcta')).toBeDefined();
 
     const input = screen.getByRole<HTMLInputElement>('textbox', { name: 'Hueco 1' });
-    expect(input.className).toContain('input-success');
+    expect(input.className).toContain('bg-success');
     expect(input.closest('.tooltip')).toBeNull();
   });
 
@@ -202,8 +202,8 @@ describe('complete words', () => {
     expect(screen.getByText('Respuesta Incorrecta')).toBeDefined();
 
     const input = screen.getByRole<HTMLInputElement>('textbox', { name: 'Hueco 1' });
-    expect(input.className).toContain('input-error');
-    expect(input.className).not.toContain('input-success');
+    expect(input.className).toContain('bg-error');
+    expect(input.className).not.toContain('bg-success');
     const tooltip = input.parentElement;
     expect(tooltip).not.toBeNull();
     expect(tooltip?.dataset.tip).toBe('Camión');
