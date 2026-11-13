@@ -449,6 +449,186 @@ function getOptionLabels(activity: Activity): Array<string> {
 // Core linting functions
 // ============================================================================
 
+function checkLongestOption(
+  options: Array<{ label: string; isCorrect?: boolean }>,
+  correctIndex: number,
+  activityIndex: number,
+  filePath: string,
+  baseLine: number,
+  baseColumn: number,
+  diagnostics: Array<Diagnostic>,
+): void {
+  // Skip true/false pairs
+  if (isTrueFalsePair(options)) return;
+
+  const correctLabel = options[correctIndex]?.label || '';
+  const correctLen = correctLabel.length;
+  const incorrectOptions = options.filter((_, i) => i !== correctIndex);
+  if (incorrectOptions.length === 0) return;
+
+  const incorrectLengths = incorrectOptions.map(o => (o.label ?? '').length);
+  const meanIncorrect = incorrectLengths.reduce((a, b) => a + b, 0) / incorrectLengths.length;
+  const ratio = correctLen / meanIncorrect;
+  const diff = correctLen - meanIncorrect;
+
+  // Build detailed message with all option lengths
+  const optionDetails = options
+    .map((o, i) => {
+      const marker = i === correctIndex ? ' (correct)' : '';
+      return `option ${i}: ${(o.label ?? '').length} chars${marker}`;
+    })
+    .join('; ');
+
+  if (options.length >= 3) {
+    if (ratio >= CONFIG.longestErrorRatio && diff >= CONFIG.longestErrorDiff) {
+      diagnostics.push({
+        ruleId: 'longest-option-is-correct',
+        severity: 'error',
+        message: `Correct option is clearly the longest (${correctLen} chars vs mean ${meanIncorrect.toFixed(1)} of incorrect, ratio ${ratio.toFixed(2)}, diff ${diff}). ${optionDetails}`,
+        filePath,
+        line: baseLine,
+        column: baseColumn,
+        activityIndex,
+        scope: 'activity',
+      });
+    } else if (ratio >= CONFIG.longestWarningRatio && diff >= CONFIG.longestWarningDiff) {
+      diagnostics.push({
+        ruleId: 'option-length-imbalance',
+        severity: 'warning',
+        message: `Correct option is longer than incorrect ones (${correctLen} chars vs mean ${meanIncorrect.toFixed(1)}, ratio ${ratio.toFixed(2)}, diff ${diff}). ${optionDetails}`,
+        filePath,
+        line: baseLine,
+        column: baseColumn,
+        activityIndex,
+        scope: 'activity',
+      });
+    }
+  } else if (options.length === 2) {
+    // Warning only for two-option activities
+    if (
+      ratio >= CONFIG.longestTwoOptionWarningRatio &&
+      diff >= CONFIG.longestTwoOptionWarningDiff
+    ) {
+      diagnostics.push({
+        ruleId: 'option-length-imbalance',
+        severity: 'warning',
+        message: `Correct option is much longer than the other (${correctLen} chars vs ${meanIncorrect.toFixed(1)}, ratio ${ratio.toFixed(2)}, diff ${diff}). ${optionDetails}`,
+        filePath,
+        line: baseLine,
+        column: baseColumn,
+        activityIndex,
+        scope: 'activity',
+      });
+    }
+  }
+}
+
+function lintLongestAlwaysCorrect(
+  activities: Array<Activity>,
+  filePath: string,
+  diagnostics: Array<Diagnostic>,
+): void {
+  const choiceActivities = activities
+    .filter(a => a.is === 'multiple-choice' || a.is === 'single-choice')
+    .filter(a => {
+      const correctIdx = getCorrectOptionIndex(a);
+      return correctIdx !== null && correctIdx !== -1 && a.options && a.options.length > 0;
+    });
+
+  if (choiceActivities.length < 3) return;
+
+  let allLongest = true;
+  const details: Array<string> = [];
+
+  for (const activity of choiceActivities) {
+    const correctIdx = getCorrectOptionIndex(activity)!;
+    const options = getOptionLabels(activity);
+    if (options.length > 0) {
+      if (isTrueFalsePair(options.map(l => ({ label: l })))) {
+        allLongest = false;
+        break;
+      }
+
+      const correctLen = options[correctIdx]!.length;
+      const incorrectLengths = options.filter((_, i) => i !== correctIdx).map(l => l.length);
+      const meanIncorrect = incorrectLengths.reduce((a, b) => a + b, 0) / incorrectLengths.length;
+      const ratio = correctLen / meanIncorrect;
+      const diff = correctLen - meanIncorrect;
+
+      const optionDetails = options
+        .map((l, i) => {
+          const marker = i === correctIdx ? ' (correct)' : '';
+          return `option ${i}: ${l.length} chars${marker}`;
+        })
+        .join('; ');
+
+      if (ratio < CONFIG.longestErrorRatio || diff < CONFIG.longestErrorDiff) {
+        allLongest = false;
+      }
+      details.push(
+        `activity ${activities.indexOf(activity)}: ${optionDetails} (ratio ${ratio.toFixed(2)}, diff ${diff})`,
+      );
+    }
+  }
+
+  if (allLongest) {
+    diagnostics.push({
+      ruleId: 'longest-is-always-correct',
+      severity: 'error',
+      message: `In all ${choiceActivities.length} choice activities, the correct option is the longest. Details: ${details.join(' | ')}`,
+      filePath,
+      line: 1,
+      column: 1,
+      scope: 'topic',
+    });
+  } else {
+    // Check if most are longest
+    let longestCount = 0;
+    for (const activity of choiceActivities) {
+      const correctIdx = getCorrectOptionIndex(activity)!;
+      const options = getOptionLabels(activity);
+      if (!isTrueFalsePair(options.map(l => ({ label: l })))) {
+        const correctLen = options[correctIdx]!.length;
+        const incorrectLengths = options.filter((_, i) => i !== correctIdx).map(l => l.length);
+        const meanIncorrect = incorrectLengths.reduce((a, b) => a + b, 0) / incorrectLengths.length;
+        const ratio = correctLen / meanIncorrect;
+        const diff = correctLen - meanIncorrect;
+
+        if (ratio >= CONFIG.longestWarningRatio && diff >= CONFIG.longestWarningDiff) {
+          longestCount++;
+        }
+      }
+    }
+
+    if (longestCount > choiceActivities.length / 2) {
+      diagnostics.push({
+        ruleId: 'longest-is-usually-correct',
+        severity: 'warning',
+        message: `In ${longestCount} of ${choiceActivities.length} choice activities, the correct option is the longest`,
+        filePath,
+        line: 1,
+        column: 1,
+        scope: 'topic',
+      });
+    }
+  }
+}
+
+function isSpanish(text: string): boolean {
+  const words = text.toLowerCase().split(/\s+/);
+  let englishCount = 0;
+  let spanishCount = 0;
+
+  for (const word of words) {
+    const clean = word.replaceAll(/[^a-záéíóúüñ]/g, '');
+    if (CONFIG.englishMarkers.has(clean)) englishCount++;
+    if (CONFIG.spanishMarkers.has(clean)) spanishCount++;
+  }
+
+  // At least 2 English markers and no Spanish markers
+  return !(englishCount >= 2 && spanishCount === 0);
+}
+
 function lintMultipleChoice(
   activity: MultipleChoiceActivity & { is: 'multiple-choice' },
   activityIndex: number,
@@ -903,80 +1083,6 @@ function lintSingleChoice(
       activityIndex,
       scope: 'activity',
     });
-  }
-}
-
-function checkLongestOption(
-  options: Array<{ label: string; isCorrect?: boolean }>,
-  correctIndex: number,
-  activityIndex: number,
-  filePath: string,
-  baseLine: number,
-  baseColumn: number,
-  diagnostics: Array<Diagnostic>,
-): void {
-  // Skip true/false pairs
-  if (isTrueFalsePair(options)) return;
-
-  const correctLabel = options[correctIndex]?.label || '';
-  const correctLen = correctLabel.length;
-  const incorrectOptions = options.filter((_, i) => i !== correctIndex);
-  if (incorrectOptions.length === 0) return;
-
-  const incorrectLengths = incorrectOptions.map(o => (o.label ?? '').length);
-  const meanIncorrect = incorrectLengths.reduce((a, b) => a + b, 0) / incorrectLengths.length;
-  const ratio = correctLen / meanIncorrect;
-  const diff = correctLen - meanIncorrect;
-
-  // Build detailed message with all option lengths
-  const optionDetails = options
-    .map((o, i) => {
-      const marker = i === correctIndex ? ' (correct)' : '';
-      return `option ${i}: ${(o.label ?? '').length} chars${marker}`;
-    })
-    .join('; ');
-
-  if (options.length >= 3) {
-    if (ratio >= CONFIG.longestErrorRatio && diff >= CONFIG.longestErrorDiff) {
-      diagnostics.push({
-        ruleId: 'longest-option-is-correct',
-        severity: 'error',
-        message: `Correct option is clearly the longest (${correctLen} chars vs mean ${meanIncorrect.toFixed(1)} of incorrect, ratio ${ratio.toFixed(2)}, diff ${diff}). ${optionDetails}`,
-        filePath,
-        line: baseLine,
-        column: baseColumn,
-        activityIndex,
-        scope: 'activity',
-      });
-    } else if (ratio >= CONFIG.longestWarningRatio && diff >= CONFIG.longestWarningDiff) {
-      diagnostics.push({
-        ruleId: 'option-length-imbalance',
-        severity: 'warning',
-        message: `Correct option is longer than incorrect ones (${correctLen} chars vs mean ${meanIncorrect.toFixed(1)}, ratio ${ratio.toFixed(2)}, diff ${diff}). ${optionDetails}`,
-        filePath,
-        line: baseLine,
-        column: baseColumn,
-        activityIndex,
-        scope: 'activity',
-      });
-    }
-  } else if (options.length === 2) {
-    // Warning only for two-option activities
-    if (
-      ratio >= CONFIG.longestTwoOptionWarningRatio &&
-      diff >= CONFIG.longestTwoOptionWarningDiff
-    ) {
-      diagnostics.push({
-        ruleId: 'option-length-imbalance',
-        severity: 'warning',
-        message: `Correct option is much longer than the other (${correctLen} chars vs ${meanIncorrect.toFixed(1)}, ratio ${ratio.toFixed(2)}, diff ${diff}). ${optionDetails}`,
-        filePath,
-        line: baseLine,
-        column: baseColumn,
-        activityIndex,
-        scope: 'activity',
-      });
-    }
   }
 }
 
@@ -1487,112 +1593,6 @@ function lintTopicLevel(
 
   // Longest is always correct (topic level)
   lintLongestAlwaysCorrect(activities, filePath, diagnostics);
-}
-
-function lintLongestAlwaysCorrect(
-  activities: Array<Activity>,
-  filePath: string,
-  diagnostics: Array<Diagnostic>,
-): void {
-  const choiceActivities = activities
-    .filter(a => a.is === 'multiple-choice' || a.is === 'single-choice')
-    .filter(a => {
-      const correctIdx = getCorrectOptionIndex(a);
-      return correctIdx !== null && correctIdx !== -1 && a.options && a.options.length > 0;
-    });
-
-  if (choiceActivities.length < 3) return;
-
-  let allLongest = true;
-  const details: Array<string> = [];
-
-  for (const activity of choiceActivities) {
-    const correctIdx = getCorrectOptionIndex(activity)!;
-    const options = getOptionLabels(activity);
-    if (options.length > 0) {
-      if (isTrueFalsePair(options.map(l => ({ label: l })))) {
-        allLongest = false;
-        break;
-      }
-
-      const correctLen = options[correctIdx]!.length;
-      const incorrectLengths = options.filter((_, i) => i !== correctIdx).map(l => l.length);
-      const meanIncorrect = incorrectLengths.reduce((a, b) => a + b, 0) / incorrectLengths.length;
-      const ratio = correctLen / meanIncorrect;
-      const diff = correctLen - meanIncorrect;
-
-      const optionDetails = options
-        .map((l, i) => {
-          const marker = i === correctIdx ? ' (correct)' : '';
-          return `option ${i}: ${l.length} chars${marker}`;
-        })
-        .join('; ');
-
-      if (ratio < CONFIG.longestErrorRatio || diff < CONFIG.longestErrorDiff) {
-        allLongest = false;
-      }
-      details.push(
-        `activity ${activities.indexOf(activity)}: ${optionDetails} (ratio ${ratio.toFixed(2)}, diff ${diff})`,
-      );
-    }
-  }
-
-  if (allLongest) {
-    diagnostics.push({
-      ruleId: 'longest-is-always-correct',
-      severity: 'error',
-      message: `In all ${choiceActivities.length} choice activities, the correct option is the longest. Details: ${details.join(' | ')}`,
-      filePath,
-      line: 1,
-      column: 1,
-      scope: 'topic',
-    });
-  } else {
-    // Check if most are longest
-    let longestCount = 0;
-    for (const activity of choiceActivities) {
-      const correctIdx = getCorrectOptionIndex(activity)!;
-      const options = getOptionLabels(activity);
-      if (!isTrueFalsePair(options.map(l => ({ label: l })))) {
-        const correctLen = options[correctIdx]!.length;
-        const incorrectLengths = options.filter((_, i) => i !== correctIdx).map(l => l.length);
-        const meanIncorrect = incorrectLengths.reduce((a, b) => a + b, 0) / incorrectLengths.length;
-        const ratio = correctLen / meanIncorrect;
-        const diff = correctLen - meanIncorrect;
-
-        if (ratio >= CONFIG.longestWarningRatio && diff >= CONFIG.longestWarningDiff) {
-          longestCount++;
-        }
-      }
-    }
-
-    if (longestCount > choiceActivities.length / 2) {
-      diagnostics.push({
-        ruleId: 'longest-is-usually-correct',
-        severity: 'warning',
-        message: `In ${longestCount} of ${choiceActivities.length} choice activities, the correct option is the longest`,
-        filePath,
-        line: 1,
-        column: 1,
-        scope: 'topic',
-      });
-    }
-  }
-}
-
-function isSpanish(text: string): boolean {
-  const words = text.toLowerCase().split(/\s+/);
-  let englishCount = 0;
-  let spanishCount = 0;
-
-  for (const word of words) {
-    const clean = word.replaceAll(/[^a-záéíóúüñ]/g, '');
-    if (CONFIG.englishMarkers.has(clean)) englishCount++;
-    if (CONFIG.spanishMarkers.has(clean)) spanishCount++;
-  }
-
-  // At least 2 English markers and no Spanish markers
-  return !(englishCount >= 2 && spanishCount === 0);
 }
 
 // ============================================================================
