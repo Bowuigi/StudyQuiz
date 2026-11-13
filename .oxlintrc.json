@@ -104,8 +104,7 @@
         "max-lines-per-function": "allow",
         "max-params": "allow",
         "max-statements": "allow",
-        "complexity": "allow",
-        "eslint/no-negated-condition": "allow"
+        "complexity": "allow"
       }
     }
   ]
