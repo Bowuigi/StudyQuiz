@@ -17,6 +17,7 @@
   "dependencies": {
     "@tailwindcss/vite": "^4.3.3",
     "daisyui": "^5.7.50",
+    "lucide-preact": "^1.72.0",
     "preact": "^11.1.0",
     "tailwindcss": "^4.3.3"
   },
