@@ -430,18 +430,18 @@ function isTrueFalsePair(options: Array<{ label: string }>): boolean {
 
 function getCorrectOptionIndex(activity: Activity): number | null {
   if (activity.is === 'multiple-choice') {
-    return activity.options.findIndex(o => o.isCorrect);
+    return activity.options?.findIndex(o => o.isCorrect) ?? -1;
   }
   if (activity.is === 'single-choice') {
     // First option is correct
-    return activity.options.length > 0 ? 0 : -1;
+    return activity.options?.length > 0 ? 0 : -1;
   }
   return null;
 }
 
 function getOptionLabels(activity: Activity): Array<string> {
   if (activity.is === 'multiple-choice' || activity.is === 'single-choice') {
-    return activity.options.map(o => o.label);
+    return activity.options.map(o => o.label ?? '');
   }
   return [];
 }
@@ -467,7 +467,7 @@ function checkLongestOption(
   const incorrectOptions = options.filter((_, i) => i !== correctIndex);
   if (incorrectOptions.length === 0) return;
 
-  const incorrectLengths = incorrectOptions.map(o => o.label.length);
+  const incorrectLengths = incorrectOptions.map(o => (o.label ?? '').length);
   const meanIncorrect = incorrectLengths.reduce((a, b) => a + b, 0) / incorrectLengths.length;
   const ratio = correctLen / meanIncorrect;
   const diff = correctLen - meanIncorrect;
@@ -476,7 +476,7 @@ function checkLongestOption(
   const optionDetails = options
     .map((o, i) => {
       const marker = i === correctIndex ? ' (correct)' : '';
-      return `option ${i}: ${o.label.length} chars${marker}`;
+      return `option ${i}: ${(o.label ?? '').length} chars${marker}`;
     })
     .join('; ');
 
@@ -638,7 +638,7 @@ function lintChoiceOptions(
   baseColumn: number,
   diagnostics: Array<Diagnostic>,
 ): void {
-  const labels = options.map(o => o.label);
+  const labels = options.map(o => o.label ?? '');
   const seenLabels = new Map<string, number>();
   for (let i = 0; i < labels.length; i++) {
     const label = labels[i]!.trim();

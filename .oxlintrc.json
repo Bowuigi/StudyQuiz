@@ -103,7 +103,8 @@
         "max-lines": "allow",
         "max-lines-per-function": "allow",
         "max-params": "allow",
-        "max-statements": "allow"
+        "max-statements": "allow",
+        "typescript/no-unnecessary-condition": "allow"
       }
     }
   ]
