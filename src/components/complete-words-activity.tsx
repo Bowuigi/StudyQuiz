@@ -28,9 +28,9 @@ function renderBlank({
   const status = confirmed ? correctness[index] : null;
   let inputClass = 'input input-bordered input-sm mx-1 w-40';
   if (status === true) {
-    inputClass += ' input-success';
+    inputClass += ' input-success bg-success';
   } else if (status === false) {
-    inputClass += ' input-error';
+    inputClass += ' input-error bg-error';
   }
 
   const input = (
