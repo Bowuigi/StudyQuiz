@@ -940,9 +940,9 @@ describe('formatDiagnosticsJson', () => {
       },
     ];
     const output = formatDiagnosticsJson(diags);
-    const parsed = JSON.parse(output);
+    const parsed = JSON.parse(output) as Array<{ ruleId: string }>;
     expect(parsed.length).toBe(1);
-    expect(parsed[0].ruleId).toBe('test-rule');
+    expect(parsed[0]!.ruleId).toBe('test-rule');
   });
 });
 
