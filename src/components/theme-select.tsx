@@ -35,7 +35,12 @@ export function ThemeSelect(): JSX.Element {
 
   return (
     <div class="flex items-center gap-2">
-      <select id="theme-select" class="select select-sm" value={theme} onChange={onChange}>
+      <select
+        id="theme-select"
+        aria-label="Tema"
+        class="select select-sm"
+        value={theme}
+        onChange={onChange}>
         {THEMES.map(option => (
           <option key={option} value={option}>
             {themeLabel(option)}
@@ -44,7 +49,7 @@ export function ThemeSelect(): JSX.Element {
       </select>
       <label class="label cursor-pointer" htmlFor="theme-select">
         <span class="label-text flex items-center gap-2">
-          <Palette size="1.3em" aria-label="Tema" aria-hidden="false" />
+          <Palette size="1.3em" aria-hidden="true" />
         </span>
       </label>
     </div>
