@@ -118,7 +118,7 @@ export function buildQuiz(subjects: Array<Subject>, options: BuildQuizOptions): 
   return shuffle(candidates, random).slice(0, limit);
 }
 
-function normalize(value: string): string {
+export function normalize(value: string): string {
   return value
     .trim()
     .toLocaleLowerCase('es')

@@ -53,6 +53,20 @@ function visibleOrder(): Array<string> {
   return screen.getAllByTestId('reorder-item').map(node => node.textContent);
 }
 
+function positionMarks(): Array<{ text: string; className: string }> {
+  return screen.getAllByTestId('reorder-item').map(node => {
+    const number = node.querySelector('span');
+    return {
+      text: number?.textContent ?? '',
+      className: number?.getAttribute('class') ?? '',
+    };
+  });
+}
+
+function selectOf(key: string): HTMLElement {
+  return screen.getByRole('combobox', { name: key });
+}
+
 describe('reorder', () => {
   it('changes the display order after a drag event sequence', () => {
     render(<QuizRunner quiz={[reorder]} onResult={resultSpy()} onFinished={finishedSpy()} />);
@@ -67,7 +81,7 @@ describe('reorder', () => {
     expect(visibleOrder()).toEqual(['Tres', 'Uno', 'Dos']);
   });
 
-  it('grades a correct order and shows the correct-answer panel', () => {
+  it('shows the correct position of each element after a correct order', () => {
     const onResult = resultSpy();
     render(<QuizRunner quiz={[reorder]} onResult={onResult} onFinished={finishedSpy()} />);
 
@@ -81,9 +95,15 @@ describe('reorder', () => {
     expect(onResult).toHaveBeenLastCalledWith(expect.objectContaining({ correct: true }));
     expect(screen.getByText('Ordenar')).toBeDefined();
     expect(screen.getByText('Respuesta Correcta')).toBeDefined();
+
+    expect(positionMarks()).toEqual([
+      { text: '1', className: expect.stringContaining('text-success') },
+      { text: '2', className: expect.stringContaining('text-success') },
+      { text: '3', className: expect.stringContaining('text-success') },
+    ]);
   });
 
-  it('grades a wrong order and still shows the correct-answer panel', () => {
+  it('shows the correct position of each element after a wrong order', () => {
     const onResult = resultSpy();
     render(<QuizRunner quiz={[reorder]} onResult={onResult} onFinished={finishedSpy()} />);
 
@@ -92,11 +112,17 @@ describe('reorder', () => {
     expect(onResult).toHaveBeenLastCalledWith(expect.objectContaining({ correct: false }));
     expect(screen.getByText('Ordenar')).toBeDefined();
     expect(screen.getByText('Respuesta Incorrecta')).toBeDefined();
+
+    expect(positionMarks()).toEqual([
+      { text: '2', className: expect.stringContaining('text-error') },
+      { text: '3', className: expect.stringContaining('text-error') },
+      { text: '1', className: expect.stringContaining('text-error') },
+    ]);
   });
 });
 
 describe('relate', () => {
-  it('updates the answer on dropdown change and grades it', () => {
+  it('grades a correct pair as correct and marks both rows', () => {
     const onResult = resultSpy();
     render(<QuizRunner quiz={[relate]} onResult={onResult} onFinished={finishedSpy()} />);
 
@@ -112,9 +138,16 @@ describe('relate', () => {
     );
     expect(screen.getByText('Relacionar')).toBeDefined();
     expect(screen.getByText('Respuesta Correcta')).toBeDefined();
+
+    expect(selectOf('a').className).toContain('outline-success');
+    expect(selectOf('a').className).not.toContain('outline-error');
+    expect(selectOf('b').className).toContain('outline-success');
+    expect(selectOf('b').className).not.toContain('outline-error');
+    expect(screen.getByText('Correcto: 1')).toBeDefined();
+    expect(screen.getByText('Correcto: 2')).toBeDefined();
   });
 
-  it('grades a wrong pair as incorrect', () => {
+  it('grades a wrong pair as incorrect and marks both rows', () => {
     const onResult = resultSpy();
     render(<QuizRunner quiz={[relate]} onResult={onResult} onFinished={finishedSpy()} />);
 
@@ -125,6 +158,13 @@ describe('relate', () => {
     expect(onResult).toHaveBeenLastCalledWith(expect.objectContaining({ correct: false }));
     expect(screen.getByText('Relacionar')).toBeDefined();
     expect(screen.getByText('Respuesta Incorrecta')).toBeDefined();
+
+    expect(selectOf('a').className).toContain('outline-error');
+    expect(selectOf('a').className).not.toContain('outline-success');
+    expect(selectOf('b').className).toContain('outline-error');
+    expect(selectOf('b').className).not.toContain('outline-success');
+    expect(screen.getByText('Correcto: 1')).toBeDefined();
+    expect(screen.getByText('Correcto: 2')).toBeDefined();
   });
 });
 
@@ -141,9 +181,13 @@ describe('complete words', () => {
     expect(onResult).toHaveBeenLastCalledWith(expect.objectContaining({ correct: true }));
     expect(screen.getByText('Completar palabras')).toBeDefined();
     expect(screen.getByText('Respuesta Correcta')).toBeDefined();
+
+    const input = screen.getByRole<HTMLInputElement>('textbox', { name: 'Hueco 1' });
+    expect(input.className).toContain('input-success');
+    expect(input.closest('.tooltip')).toBeNull();
   });
 
-  it('grades a wrong answer as incorrect and disables the input', () => {
+  it('grades a wrong answer as incorrect, shows the correct answer, and disables the input', () => {
     const onResult = resultSpy();
     render(<QuizRunner quiz={[completeWords]} onResult={onResult} onFinished={finishedSpy()} />);
 
@@ -156,5 +200,12 @@ describe('complete words', () => {
     expect(screen.getByRole<HTMLInputElement>('textbox', { name: 'Hueco 1' }).disabled).toBe(true);
     expect(screen.getByText('Completar palabras')).toBeDefined();
     expect(screen.getByText('Respuesta Incorrecta')).toBeDefined();
+
+    const input = screen.getByRole<HTMLInputElement>('textbox', { name: 'Hueco 1' });
+    expect(input.className).toContain('input-error');
+    expect(input.className).not.toContain('input-success');
+    const tooltip = input.parentElement;
+    expect(tooltip).not.toBeNull();
+    expect(tooltip?.dataset.tip).toBe('Camión');
   });
 });

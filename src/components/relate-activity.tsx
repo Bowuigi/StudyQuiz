@@ -37,31 +37,41 @@ export function RelateActivity({
     [activity.related],
   );
 
+  function renderRow(key: string): JSX.Element {
+    const correctValue = activity.related[key];
+    const isCorrect = confirmed ? pairs[key] === correctValue : null;
+    const outlineClass =
+      isCorrect === true ? 'outline-2 outline-success' : 'outline-2 outline-error';
+
+    return (
+      <label key={key} class="flex flex-col gap-1 sm:flex-row sm:items-center sm:gap-3">
+        <div class="flex flex-col gap-1">
+          <span class="min-w-32 font-medium">{key}</span>
+          {confirmed && <span class="text-xs text-base-content/60">Correcto: {correctValue}</span>}
+        </div>
+        <select
+          class={`select ${confirmed ? outlineClass : ''}`}
+          aria-label={key}
+          value={pairs[key] ?? ''}
+          disabled={confirmed}
+          onChange={event => {
+            onSelect(key, event.currentTarget.value);
+          }}>
+          <option value="">Selecciona</option>
+          {optionsByKey[key]?.map(optionValue => (
+            <option key={optionValue} value={optionValue}>
+              {optionValue}
+            </option>
+          ))}
+        </select>
+      </label>
+    );
+  }
+
   return (
     <div class="flex flex-col gap-4">
       <h2 class="text-xl font-bold">{activity.title}</h2>
-      <div class="flex flex-col gap-3">
-        {keys.map(key => (
-          <label key={key} class="flex flex-col gap-1 sm:flex-row sm:items-center sm:gap-3">
-            <span class="min-w-32 font-medium">{key}</span>
-            <select
-              class="select"
-              aria-label={key}
-              value={pairs[key] ?? ''}
-              disabled={confirmed}
-              onChange={event => {
-                onSelect(key, event.currentTarget.value);
-              }}>
-              <option value="">Selecciona</option>
-              {optionsByKey[key]?.map(value => (
-                <option key={value} value={value}>
-                  {value}
-                </option>
-              ))}
-            </select>
-          </label>
-        ))}
-      </div>
+      <div class="flex flex-col gap-3">{keys.map(key => renderRow(key))}</div>
     </div>
   );
 }

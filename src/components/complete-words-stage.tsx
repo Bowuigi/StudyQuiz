@@ -1,7 +1,7 @@
 import type { JSX } from 'preact';
 import { useState } from 'preact/hooks';
 
-import { type QuizAnswer, gradeAnswer, type QuizItem } from '../quiz.ts';
+import { type QuizAnswer, gradeAnswer, normalize, type QuizItem } from '../quiz.ts';
 import type { CompleteWordsActivity as CompleteWordsData } from '../types.d.ts';
 import { ActivityHeader } from './activity-header.tsx';
 import { CompleteWordsActivity } from './complete-words-activity.tsx';
@@ -27,6 +27,9 @@ export function CompleteWordsStage({
   );
   const [confirmed, setConfirmed] = useState(false);
   const [correct, setCorrect] = useState(false);
+  const [blankCorrect, setBlankCorrect] = useState<Array<boolean | null>>(() =>
+    Array.from({ length: blankCount }, () => null),
+  );
 
   function change(index: number, value: string): void {
     if (confirmed) return;
@@ -39,6 +42,12 @@ export function CompleteWordsStage({
 
     const answer: QuizAnswer = { is: 'complete-words', blanks };
     const grade = gradeAnswer(item, answer);
+
+    const blankParts = activity.parts.filter(part => part.isBlank);
+    const marks = blankParts.map(
+      (part, blankIndex) => normalize(blanks[blankIndex] ?? '') === normalize(part.label),
+    );
+    setBlankCorrect(marks);
     setCorrect(grade.correct);
     setConfirmed(true);
     onResult({ item, answer, correct: grade.correct });
@@ -51,6 +60,7 @@ export function CompleteWordsStage({
         activity={activity}
         blanks={blanks}
         confirmed={confirmed}
+        correctness={blankCorrect}
         onChange={change}
       />
       <StageActions confirmed={confirmed} onNext={onNext} onConfirm={confirm} />

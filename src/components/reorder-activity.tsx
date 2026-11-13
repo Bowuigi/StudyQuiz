@@ -26,6 +26,9 @@ export function ReorderActivity({
           const element = activity.elements[elementIndex];
           if (element === undefined) return null;
 
+          const correctPosition = confirmed ? activity.elements.indexOf(element) + 1 : 0;
+          const isRightPosition = confirmed ? correctPosition === position + 1 : false;
+
           return (
             <li
               key={elementIndex}
@@ -45,6 +48,12 @@ export function ReorderActivity({
                   dragged.current = null;
                 }
               }}>
+              {confirmed && (
+                <span
+                  class={`text-2xl font-bold mr-3 ${isRightPosition ? 'text-success' : 'text-error'}`}>
+                  {correctPosition}
+                </span>
+              )}
               {element}
             </li>
           );
