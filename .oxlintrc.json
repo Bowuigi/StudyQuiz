@@ -110,8 +110,6 @@
         "unicorn/no-negated-condition": "allow",
         "eslint/no-negated-condition": "allow",
         "unicorn/no-process-exit": "allow",
-        "eslint/no-inline-comments": "allow",
-        "eslint/capitalized-comments": "allow",
         "typescript/prefer-nullish-coalescing": "allow",
         "typescript/prefer-optional-chain": "allow",
         "typescript/no-unnecessary-condition": "allow",

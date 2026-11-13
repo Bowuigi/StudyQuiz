@@ -461,7 +461,8 @@ describe('lintTopicFile - complete-words validation', () => {
       ...VALID_COMPLETE_WORDS,
       parts: [
         { isBlank: false, label: 'La capital de Francia es ' },
-        { isBlank: true, label: 'París la hermosa ciudad' }, // 4 words
+        // 4 words
+        { isBlank: true, label: 'París la hermosa ciudad' },
         { isBlank: false, label: '.' },
       ],
     };
@@ -475,7 +476,8 @@ describe('lintTopicFile - complete-words validation', () => {
       ...VALID_COMPLETE_WORDS,
       parts: [
         { isBlank: false, label: 'La capital de Francia es ' },
-        { isBlank: true, label: 'de' }, // filler word
+        // Filler word
+        { isBlank: true, label: 'de' },
         { isBlank: false, label: ' París.' },
       ],
     };
@@ -620,13 +622,16 @@ describe('lintTopicFile - longest option detection', () => {
       is: 'multiple-choice',
       question: 'Test question?',
       options: [
-        { label: 'Short', isCorrect: false, explanation: 'Wrong.' }, // 5 chars
+        // 5 chars
+        { label: 'Short', isCorrect: false, explanation: 'Wrong.' },
         {
+          // ~60 chars
           label: 'This is a very long correct option that is clearly the longest',
           isCorrect: true,
           explanation: 'Correct.',
-        }, // ~60 chars
-        { label: 'Medium', isCorrect: false, explanation: 'Wrong.' }, // 6 chars
+        },
+        // 6 chars
+        { label: 'Medium', isCorrect: false, explanation: 'Wrong.' },
       ],
     };
     const result = lintTopicFile('test.json', createTopicFile([activity]));
@@ -644,9 +649,12 @@ describe('lintTopicFile - longest option detection', () => {
       is: 'multiple-choice',
       question: 'Test question?',
       options: [
-        { label: 'Short', isCorrect: false, explanation: 'Wrong.' }, // 5 chars
-        { label: 'Correct opt', isCorrect: true, explanation: 'Correct.' }, // 11 chars
-        { label: 'Medium', isCorrect: false, explanation: 'Wrong.' }, // 6 chars
+        // 5 chars
+        { label: 'Short', isCorrect: false, explanation: 'Wrong.' },
+        // 11 chars
+        { label: 'Correct opt', isCorrect: true, explanation: 'Correct.' },
+        // 6 chars
+        { label: 'Medium', isCorrect: false, explanation: 'Wrong.' },
       ],
     };
     const result = lintTopicFile('test.json', createTopicFile([activity]));
@@ -679,10 +687,12 @@ describe('lintTopicFile - longest option detection', () => {
       question: 'Test?',
       options: [
         {
+          // ~50 chars
           label: 'This is a very long correct option that is much longer',
           explanation: 'Correct.',
-        }, // ~50 chars
-        { label: 'Short', explanation: 'Wrong.' }, // 5 chars
+        },
+        // 5 chars
+        { label: 'Short', explanation: 'Wrong.' },
       ],
     };
     const result = lintTopicFile('test.json', createTopicFile([activity]));
@@ -806,7 +816,7 @@ describe('lintTopicFile - line/column reporting', () => {
 
   it('reports line numbers at activity object boundaries, not nested arrays (regression)', () => {
     // This test ensures findActivityOffsets tracks { } at array depth 1,
-    // not [ ] of nested arrays like "options"
+    // Not [ ] of nested arrays like "options"
     const raw = `[
   {
     "is": "multiple-choice",
@@ -833,7 +843,8 @@ describe('lintTopicFile - line/column reporting', () => {
     // The activity object starts on line 10
     // Before the fix, it would report line 8 (end of first activity's options array)
     expect(emptyTextError.activityIndex).toBe(1);
-    expect(emptyTextError.line).toBe(10); // Activity 2 starts at line 10
+    // Activity 2 starts at line 10
+    expect(emptyTextError.line).toBe(10);
   });
 });
 
@@ -1052,7 +1063,8 @@ describe('edge cases', () => {
   });
 
   it('reports missing-field for wrong activity shape', () => {
-    const raw = `[{"is": "multiple-choice", "question": "Test?"}]`; // missing options
+    // Missing options
+    const raw = `[{"is": "multiple-choice", "question": "Test?"}]`;
     const result = lintTopicFile('test.json', raw);
     const errors = getErrors(result.diagnostics);
     // The activity validation will fail on options access
