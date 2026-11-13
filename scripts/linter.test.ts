@@ -249,7 +249,7 @@ describe('lintTopicFile - multiple-choice validation', () => {
     expect(diag.message).toContain('chars');
   });
 
-  it('reports meta-question warning', () => {
+  it('reports meta-question warning for coverage phrasing', () => {
     const activity: Activity = {
       ...VALID_MULTIPLE_CHOICE,
       question: '¿Está cubierto el tema de las capitales en estas notas?',
@@ -257,6 +257,48 @@ describe('lintTopicFile - multiple-choice validation', () => {
     const result = lintTopicFile('test.json', createTopicFile([activity]));
     const warnings = getWarnings(result.diagnostics);
     expect(hasRule(warnings, 'meta-question')).toBe(true);
+  });
+
+  it('reports meta-question warning for "parcial"', () => {
+    const activity: Activity = {
+      ...VALID_MULTIPLE_CHOICE,
+      question: '¿Esto va a salir en el parcial?',
+    };
+    const result = lintTopicFile('test.json', createTopicFile([activity]));
+    const warnings = getWarnings(result.diagnostics);
+    expect(hasRule(warnings, 'meta-question')).toBe(true);
+  });
+
+  it('reports meta-question warning for "examen"', () => {
+    const activity: Activity = {
+      ...VALID_MULTIPLE_CHOICE,
+      question: '¿Está esto en el examen final?',
+    };
+    const result = lintTopicFile('test.json', createTopicFile([activity]));
+    const warnings = getWarnings(result.diagnostics);
+    expect(hasRule(warnings, 'meta-question')).toBe(true);
+  });
+
+  it('does not report meta-question for "según el material" (belongs to refers-to-material)', () => {
+    const activity: Activity = {
+      ...VALID_MULTIPLE_CHOICE,
+      question: '¿Qué incluye BI según el material de BI?',
+    };
+    const result = lintTopicFile('test.json', createTopicFile([activity]));
+    const warnings = getWarnings(result.diagnostics);
+    expect(hasRule(warnings, 'meta-question')).toBe(false);
+    expect(hasRule(warnings, 'refers-to-material')).toBe(true);
+  });
+
+  it('does not report meta-question for a plain topic question', () => {
+    const activity: Activity = {
+      ...VALID_MULTIPLE_CHOICE,
+      question: '¿Cuáles son los componentes de BI?',
+    };
+    const result = lintTopicFile('test.json', createTopicFile([activity]));
+    const warnings = getWarnings(result.diagnostics);
+    expect(hasRule(warnings, 'meta-question')).toBe(false);
+    expect(hasRule(warnings, 'refers-to-material')).toBe(false);
   });
 
   it('reports refers-to-material warning', () => {

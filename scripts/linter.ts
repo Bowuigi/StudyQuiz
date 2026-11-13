@@ -226,20 +226,16 @@ const CONFIG = {
     'puede',
     'pueden',
   ]),
-  // Meta question patterns
+  // Meta questions ask about the exam/coverage rather than the topic itself.
+  // Attribution to the material belongs to `refers-to-material`.
   metaPatterns: [
-    /est[áa]\s+cubiert/i,
-    /est[áa]n\s+cubiert/i,
+    // Final / parcial / examen
+    /\bfinal\b/i,
+    /\bparcial\b/i,
+    /ex[áa]men/i,
+    // Cobertura del tema
+    /est[áa]n?\s+cubiert/i,
     /cubr[eé]\s+el\s+tema/i,
-    /est[áa]s\s+notas/i,
-    /en\s+el\s+material/i,
-    /seg[uú]n\s+el\s+material/i,
-    /las\s+notas\s+dicen/i,
-    /el\s+material\s+dice/i,
-    /seg[uú]n\s+las\s+notas/i,
-    /en\s+las\s+notas/i,
-    /el\s+ejemplo\s+de/i,
-    /en\s+el\s+ejemplo\s+de/i,
   ],
   // Explanation-only patterns
   explanationOnlyPatterns: [
