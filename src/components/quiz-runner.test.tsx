@@ -59,11 +59,11 @@ describe('single choice', () => {
     render(<QuizRunner quiz={[singleChoice]} onResult={onResult} onFinished={finishedSpy()} />);
 
     expect(screen.getByText('Opción única')).toBeDefined();
-    expect(screen.queryByText('Respuesta Correcta')).toBeNull();
+    expect(screen.queryByText('Respuesta correcta')).toBeNull();
 
     fireEvent.click(screen.getByRole('radio', { name: 'Roma' }));
 
-    expect(screen.getByText('Respuesta Correcta')).toBeDefined();
+    expect(screen.getByText('Respuesta correcta')).toBeDefined();
     expect(screen.getByRole('radio', { name: 'Roma' }).getAttribute('class')).toContain(
       'radio-success',
     );
@@ -71,13 +71,13 @@ describe('single choice', () => {
     expect(onResult).toHaveBeenCalledTimes(1);
   });
 
-  it('shows Respuesta Incorrecta and radio-error for a wrong answer', () => {
+  it('shows Respuesta incorrecta and radio-error for a wrong answer', () => {
     const onResult = resultSpy();
     render(<QuizRunner quiz={[singleChoice]} onResult={onResult} onFinished={finishedSpy()} />);
 
     fireEvent.click(screen.getByRole('radio', { name: 'París' }));
 
-    expect(screen.getByText('Respuesta Incorrecta')).toBeDefined();
+    expect(screen.getByText('Respuesta incorrecta')).toBeDefined();
     expect(screen.getByRole('radio', { name: 'París' }).getAttribute('class')).toContain(
       'radio-error',
     );
@@ -105,13 +105,13 @@ describe('multiple choice', () => {
     fireEvent.click(screen.getByRole('checkbox', { name: '2' }));
     fireEvent.click(screen.getByRole('checkbox', { name: '8' }));
 
-    expect(screen.queryByText('Respuesta Correcta')).toBeNull();
+    expect(screen.queryByText('Respuesta correcta')).toBeNull();
     expect(screen.queryByRole('button', { name: 'Siguiente' })).toBeNull();
 
     fireEvent.click(screen.getByRole('button', { name: 'Confirmar' }));
 
     expect(screen.getByText('Opción múltiple')).toBeDefined();
-    expect(screen.getByText('Respuesta Correcta')).toBeDefined();
+    expect(screen.getByText('Respuesta correcta')).toBeDefined();
     const twoClass = screen.getByRole('checkbox', { name: '2' }).getAttribute('class');
     const eightClass = screen.getByRole('checkbox', { name: '8' }).getAttribute('class');
     const threeClass = screen.getByRole('checkbox', { name: '3' }).getAttribute('class');
@@ -198,8 +198,8 @@ describe('card flip', () => {
 
     expect(screen.getByText('Frente')).toBeDefined();
     expect(screen.getByText('Tarjetas')).toBeDefined();
-    expect(screen.queryByText('Respuesta Correcta')).toBeNull();
-    expect(screen.queryByText('Respuesta Incorrecta')).toBeNull();
+    expect(screen.queryByText('Respuesta correcta')).toBeNull();
+    expect(screen.queryByText('Respuesta incorrecta')).toBeNull();
     expect(screen.queryByRole('button', { name: 'Lo sé' })).toBeNull();
     expect(screen.queryByRole('button', { name: 'Me olvidé' })).toBeNull();
     expect(screen.queryByRole('button', { name: 'Mostrar respuesta' })).toBeNull();

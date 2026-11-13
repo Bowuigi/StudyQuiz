@@ -94,7 +94,7 @@ describe('reorder', () => {
 
     expect(onResult).toHaveBeenLastCalledWith(expect.objectContaining({ correct: true }));
     expect(screen.getByText('Ordenar')).toBeDefined();
-    expect(screen.getByText('Respuesta Correcta')).toBeDefined();
+    expect(screen.getByText('Respuesta correcta')).toBeDefined();
 
     expect(positionMarks()).toEqual([
       { text: '1', className: expect.stringContaining('text-success') },
@@ -111,7 +111,7 @@ describe('reorder', () => {
 
     expect(onResult).toHaveBeenLastCalledWith(expect.objectContaining({ correct: false }));
     expect(screen.getByText('Ordenar')).toBeDefined();
-    expect(screen.getByText('Respuesta Incorrecta')).toBeDefined();
+    expect(screen.getByText('Respuesta incorrecta')).toBeDefined();
 
     expect(positionMarks()).toEqual([
       { text: '2', className: expect.stringContaining('text-error') },
@@ -137,7 +137,7 @@ describe('relate', () => {
       }),
     );
     expect(screen.getByText('Relacionar')).toBeDefined();
-    expect(screen.getByText('Respuesta Correcta')).toBeDefined();
+    expect(screen.getByText('Respuesta correcta')).toBeDefined();
 
     expect(selectOf('a').className).toContain('outline-success');
     expect(selectOf('a').className).not.toContain('outline-error');
@@ -157,7 +157,7 @@ describe('relate', () => {
 
     expect(onResult).toHaveBeenLastCalledWith(expect.objectContaining({ correct: false }));
     expect(screen.getByText('Relacionar')).toBeDefined();
-    expect(screen.getByText('Respuesta Incorrecta')).toBeDefined();
+    expect(screen.getByText('Respuesta incorrecta')).toBeDefined();
 
     expect(selectOf('a').className).toContain('outline-error');
     expect(selectOf('a').className).not.toContain('outline-success');
@@ -180,7 +180,7 @@ describe('complete words', () => {
 
     expect(onResult).toHaveBeenLastCalledWith(expect.objectContaining({ correct: true }));
     expect(screen.getByText('Completar palabras')).toBeDefined();
-    expect(screen.getByText('Respuesta Correcta')).toBeDefined();
+    expect(screen.getByText('Respuesta correcta')).toBeDefined();
 
     const input = screen.getByRole<HTMLInputElement>('textbox', { name: 'Hueco 1' });
     expect(input.className).toContain('bg-success');
@@ -199,7 +199,7 @@ describe('complete words', () => {
     expect(onResult).toHaveBeenLastCalledWith(expect.objectContaining({ correct: false }));
     expect(screen.getByRole<HTMLInputElement>('textbox', { name: 'Hueco 1' }).disabled).toBe(true);
     expect(screen.getByText('Completar palabras')).toBeDefined();
-    expect(screen.getByText('Respuesta Incorrecta')).toBeDefined();
+    expect(screen.getByText('Respuesta incorrecta')).toBeDefined();
 
     const input = screen.getByRole<HTMLInputElement>('textbox', { name: 'Hueco 1' });
     expect(input.className).toContain('bg-error');
