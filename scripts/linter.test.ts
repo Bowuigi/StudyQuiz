@@ -1,3 +1,7 @@
+import { mkdtempSync, mkdirSync, writeFileSync, rmSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import path from 'node:path';
+
 /// <reference types="node" />
 import { describe, it, expect } from 'vitest';
 
@@ -1034,8 +1038,35 @@ describe('subject-level checks', () => {
   });
 
   it('reports duplicate-question-across-topics warning', () => {
-    // Requires multiple topic files in same subject
-    // Hard to test without filesystem setup
+    const root = mkdtempSync(path.join(tmpdir(), 'study-quiz-lint-'));
+    const subjectDir = path.join(root, 'biologia');
+    mkdirSync(subjectDir, { recursive: true });
+
+    const question = '¿Cuál es la capital de Francia?';
+    const activity = {
+      is: 'multiple-choice',
+      question,
+      options: [
+        { label: 'Madrid', isCorrect: false, explanation: 'Es la capital de España.' },
+        { label: 'París', isCorrect: true, explanation: 'Es la capital de Francia.' },
+        { label: 'Roma', isCorrect: false, explanation: 'Es la capital de Italia.' },
+      ],
+    };
+    writeFileSync(path.join(subjectDir, 'capitales-europa.json'), JSON.stringify([activity]));
+    writeFileSync(path.join(subjectDir, 'capitales-america.json'), JSON.stringify([activity]));
+
+    try {
+      const result = lintContentDirectory(root);
+      const warnings = getWarnings(result);
+      expect(hasRule(warnings, 'duplicate-question-across-topics')).toBe(true);
+      const diag = getDiagnostic(warnings, 'duplicate-question-across-topics')!;
+      expect(diag.message).toContain(question);
+      expect(diag.message).toContain('capitales-europa.json');
+      expect(diag.message).toContain('capitales-america.json');
+      expect(diag.scope).toBe('subject');
+    } finally {
+      rmSync(root, { recursive: true, force: true });
+    }
   });
 });
 

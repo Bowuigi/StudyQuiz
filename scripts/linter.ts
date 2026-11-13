@@ -5,7 +5,7 @@
 import { readFileSync, readdirSync, statSync, existsSync } from 'node:fs';
 import path from 'node:path';
 import { styleText } from 'node:util';
-const { join, relative, dirname, basename } = path;
+const { join, basename } = path;
 
 // ============================================================================
 // Configuration block - thresholds can be tuned here
@@ -1657,26 +1657,33 @@ function lintSubjectLevel(subjectDiagnostics: SubjectDiagnostics): Array<Diagnos
   // Subject without topics (handled at directory level)
 
   // Duplicate questions across topics
-  const questionToTopics = new Map<string, Array<{ topicPath: string; activityIndex: number }>>();
+  const questionToLocations = new Map<
+    string,
+    Array<{ topicPath: string; activityIndex: number; question: string }>
+  >();
   for (const topic of topics) {
     for (let i = 0; i < topic.activities.length; i++) {
       const a = topic.activities[i]!;
       if (a.is === 'multiple-choice' || a.is === 'single-choice') {
         const norm = normalizeQuestion(a.question);
-        if (!questionToTopics.has(norm)) questionToTopics.set(norm, []);
-        questionToTopics.get(norm)!.push({ topicPath: topic.filePath, activityIndex: i });
+        if (!questionToLocations.has(norm)) questionToLocations.set(norm, []);
+        questionToLocations.get(norm)!.push({
+          topicPath: topic.filePath,
+          activityIndex: i,
+          question: a.question,
+        });
       }
     }
   }
 
-  for (const [_norm, locations] of questionToTopics) {
+  for (const locations of questionToLocations.values()) {
     if (locations.length > 1) {
       const first = locations[0]!;
       for (const loc of locations.slice(1)) {
         diagnostics.push({
           ruleId: 'duplicate-question-across-topics',
           severity: 'warning',
-          message: `Same question appears in "${relative(dirname(first.topicPath), loc.topicPath)}" activity ${loc.activityIndex} (first in "${basename(first.topicPath)}" activity ${first.activityIndex})`,
+          message: `Duplicate question "${first.question}" across topics: first in "${basename(first.topicPath)}" (activity ${first.activityIndex}), repeated in "${basename(loc.topicPath)}" (activity ${loc.activityIndex})`,
           filePath: loc.topicPath,
           line: 1,
           column: 1,
