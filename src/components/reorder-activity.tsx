@@ -35,7 +35,7 @@ export function ReorderActivity({
               key={elementIndex}
               data-testid="reorder-item"
               draggable={!confirmed}
-              class="cursor-grab rounded-box border border-base-300 bg-base-100 p-3 shadow-sm"
+              class="cursor-grab rounded-box border border-base-300 bg-base-100 p-3 shadow-sm flex flex-row items-center"
               onDragStart={() => {
                 dragged.current = position;
               }}
@@ -49,10 +49,10 @@ export function ReorderActivity({
                   dragged.current = null;
                 }
               }}>
-              <GripVertical size="1em" class="opacity-50 mr-2" />
+              {confirmed || <GripVertical size="1.2em" class="opacity-50 mr-2" />}
               {confirmed && (
                 <span
-                  class={`text-2xl font-bold mr-3 ${isRightPosition ? 'text-success' : 'text-error'}`}>
+                  class={`text-2xl font-bold ml-1 mr-2 ${isRightPosition ? 'text-success' : 'text-error'}`}>
                   {correctPosition}
                 </span>
               )}

@@ -47,7 +47,7 @@ export function RelateActivity({
       <label key={key} class="flex flex-col gap-1 sm:flex-row sm:items-center sm:gap-3">
         <div class="flex flex-col gap-1">
           <span class="min-w-32 font-medium">{key}</span>
-          {confirmed && <span class="text-xs text-base-content/60">Correcto: {correctValue}</span>}
+          {confirmed && <span class="text-xs text-base-content/60">{correctValue}</span>}
         </div>
         <select
           class={`select ${confirmed ? outlineClass : ''}`}

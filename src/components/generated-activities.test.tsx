@@ -143,8 +143,8 @@ describe('relate', () => {
     expect(selectOf('a').className).not.toContain('outline-error');
     expect(selectOf('b').className).toContain('outline-success');
     expect(selectOf('b').className).not.toContain('outline-error');
-    expect(screen.getByText('Correcto: 1')).toBeDefined();
-    expect(screen.getByText('Correcto: 2')).toBeDefined();
+    expect(screen.getByText('1', { selector: 'span' })).toBeDefined();
+    expect(screen.getByText('2', { selector: 'span' })).toBeDefined();
   });
 
   it('grades a wrong pair as incorrect and marks both rows', () => {
@@ -163,8 +163,8 @@ describe('relate', () => {
     expect(selectOf('a').className).not.toContain('outline-success');
     expect(selectOf('b').className).toContain('outline-error');
     expect(selectOf('b').className).not.toContain('outline-success');
-    expect(screen.getByText('Correcto: 1')).toBeDefined();
-    expect(screen.getByText('Correcto: 2')).toBeDefined();
+    expect(screen.getByText('1', { selector: 'span' })).toBeDefined();
+    expect(screen.getByText('2', { selector: 'span' })).toBeDefined();
   });
 });
 
