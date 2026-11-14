@@ -2,7 +2,7 @@
 
 Una aplicación web sencilla que se ocupa de agregar y presentar cuestionarios, tarjetas, comparaciones, y otras actividades para el estudio.
 
-**Aviso importante**: Todo StudyQuiz fue hecho con _vibe coding_ bajo poca supervisión. Se testeó manualmente (y hay pruebas automáticas) pero no hay garantías de correcto funcionamiento. En `plans/` están los planes principales que guiaron la creación de la aplicación web.
+**Aviso importante**: Todo StudyQuiz fue hecho con _vibe coding_ bajo poca supervisión del código. Se testeó manualmente (y hay pruebas automáticas, también generadas por IA) pero no hay garantías de correcto funcionamiento. Véase la sección "Transparencia: IA" para más detalles.
 
 Se incluye un _prompt_ para [generar actividades dado el material de estudio](./QUESTION_GENERATION_PROMPT.md), además de un _linter_ que verifica la adhesión del contenido final a esta guía, para conseguir mejores resultados.
 
@@ -103,3 +103,21 @@ Configurables en `scripts/linter.ts` (bloque `CONFIG`):
 - **3+ opciones**: error si `correct >= 1.5 * media_incorrectas` Y `correct - media >= 10`; advertencia si `>= 1.25` Y `>= 5`
 - **2 opciones**: solo advertencia si `correct >= 2 * otra` Y `diff >= 20`
 - **Exención**: parejas verdadero/falso (verdadero/falso, sí/no, true/false) nunca reportan
+
+## Transparencia: IA
+
+En `plans/` están los planes principales que guiaron la creación de la aplicación web. También se utilizaron _prompts_ adicionales para rediseñar la UI conforme a mis opiniones, siguiendo partes de la UX de Google NotebookLM / Google Gemini Notebook.
+
+_Harnesses_ usados (en ningún orden en particular):
+
+- [OpenCode](https://opencode.ai/)
+- [Pi](https://pi.dev/)
+- [Prospero](https://github.com/skeeto/prospero)
+
+Modelos usados (todos de pesos abiertos, de más grande a más chico):
+
+- DeepSeek V4.1 Flash 1017 552B _backbone_ / 196B _engram_ (simultáneos, 763B totales), A8B _prefill_ / A16B _decode_ (o uno, o el otro): [HuggingFace](https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash-1017), [publicación sobre la versión anterior](https://www.deepseek.com/en/news/deepseek-v4-1-flash/)
+- Minimax M3.1 Flash 428B A23B: [HuggingFace](https://huggingface.co/MiniMaxAI/MiniMax-M3.1-Flash), [publicación de MiniMax](https://www.minimax.io/blog/minimax-m31f)
+- NVIDIA Nemotron 3 Ultra 550B A55B: [HuggingFace](https://huggingface.co/nvidia/NVIDIA-Nemotron-3-Ultra-550B-A55B-BF16), [publicación de NVIDIA Research](https://research.nvidia.com/labs/nemotron/Nemotron-3-Ultra/), [publicación de NVIDIA Developer](https://developer.nvidia.com/blog/nvidia-nemotron-3-ultra-powers-faster-more-efficient-reasoning-for-long-running-agents/)
+- NVIDIA Nemotron 3.5 Super VL 120B A12B: [HuggingFace](https://huggingface.co/nvidia/NVIDIA-Nemotron-3.5-Super-VL-120B-A12B-BF16), [publicación en español de NVIDIA](https://la.blogs.nvidia.com/blog/nemotron-3-5-super-vl/), [publicación de NVIDIA Research](https://research.nvidia.com/labs/nemotron/Nemotron-3.5-Super-and-Lightning/)
+- Meta Muse Glimmer 30B: [HuggingFace](https://huggingface.co/meta-models/Muse-Glimmer-30B), [publicación de Meta Research](https://ai.meta.com/research/publications/muse-glimmer-30b-an-on-device-agentic-model/)
